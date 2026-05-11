@@ -1,33 +1,36 @@
 import { useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { VisitantePage } from "./pages/VisitantePage";
 import { SeleccionarDepartamentoPage } from "./pages/SeleccionarDepartamentoPage";
 import { LlamadaPage } from "./pages/LlamadaPage";
+import { DashboardPage } from "./pages/DashboardPage";
+import UserManagementPage from "./pages/UserManagementPage";
+import NewUserPage from "./pages/NewUserPage";
 
-type Page = "inicio" | "seleccionar" | "llamada";
-
-export const App = () => {
-  const [currentPage, setCurrentPage] = useState<Page>("inicio");
+const VisitanteFlow = () => {
+  const [step, setStep] = useState<"inicio" | "seleccionar" | "llamada">("inicio");
   const [deptoActual, setDeptoActual] = useState<number>(1);
 
-  const handleEscanear = () => {
-    setCurrentPage("seleccionar");
-  };
-
+  const handleEscanear = () => setStep("seleccionar");
   const handleLlamar = (depto: number) => {
     setDeptoActual(depto);
-    setCurrentPage("llamada");
+    setStep("llamada");
   };
+  const handleVolver = () => setStep("inicio");
+  const handleCancelar = () => setStep("seleccionar");
 
-  const handleVolver = () => {
-    setCurrentPage("inicio");
-  };
+  if (step === "seleccionar") {
+    return <SeleccionarDepartamentoPage onLlamar={handleLlamar} onVolver={handleVolver} />;
+  }
+  if (step === "llamada") {
+    return <LlamadaPage depto={deptoActual} onCancelar={handleCancelar} />;
+  }
+  return <VisitantePage onEscanear={handleEscanear} />;
+};
 
-  const handleCancelar = () => {
-    setCurrentPage("seleccionar");
-  };
-
+export const App = () => {
   return (
-    <>
+    <BrowserRouter>
       <style>{`
         * {
           box-sizing: border-box;
@@ -51,18 +54,13 @@ export const App = () => {
           transform: scale(0.98);
         }
       `}</style>
-      {currentPage === "inicio" && (
-        <VisitantePage onEscanear={handleEscanear} />
-      )}
-      {currentPage === "seleccionar" && (
-        <SeleccionarDepartamentoPage
-          onLlamar={handleLlamar}
-          onVolver={handleVolver}
-        />
-      )}
-      {currentPage === "llamada" && (
-        <LlamadaPage depto={deptoActual} onCancelar={handleCancelar} />
-      )}
-    </>
+      <Routes>
+        <Route path="/" element={<VisitanteFlow />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/gestion-usuarios" element={<UserManagementPage />} />
+        <Route path="/nuevo-usuario" element={<NewUserPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
