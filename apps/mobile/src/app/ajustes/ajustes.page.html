@@ -1,0 +1,96 @@
+<ion-content class="ajustes-content">
+  <ion-header class="ion-no-border ajustes-header animate-fade-in-up">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="volver()" class="back-btn">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-title>Ajustes</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="ajustes-container">
+    <!-- Perfil mini -->
+    <div class="profile-card animate-fade-in-up delay-1">
+      <div class="profile-avatar">
+        <ion-icon name="person"></ion-icon>
+      </div>
+      <div class="profile-info">
+        <h2>Residente</h2>
+        <p>{{ unidad }}</p>
+      </div>
+    </div>
+
+    <!-- Notificaciones -->
+    <div class="ajustes-section animate-fade-in-up delay-2">
+      <div class="section-header-row">
+        <ion-icon name="notifications-outline" class="section-icon"></ion-icon>
+        <h3 class="section-title">Notificaciones</h3>
+      </div>
+
+      <ion-list class="custom-list" lines="none">
+        <ion-item class="custom-item">
+          <ion-icon name="mail-unread-outline" slot="start" class="item-icon"></ion-icon>
+          <ion-label>Recibir avisos</ion-label>
+          <ion-toggle
+            [checked]="notificaciones.recibirAvisos"
+            (ionChange)="toggleNotificacion('recibirAvisos')"
+            class="custom-toggle">
+          </ion-toggle>
+        </ion-item>
+
+        <ion-item class="custom-item">
+          <ion-icon name="phone-portrait-outline" slot="start" class="item-icon"></ion-icon>
+          <ion-label>Push en celular</ion-label>
+          <ion-toggle
+            [checked]="notificaciones.push"
+            (ionChange)="toggleNotificacion('push')"
+            class="custom-toggle">
+          </ion-toggle>
+        </ion-item>
+
+        <ion-item class="custom-item">
+          <ion-icon name="logo-whatsapp" slot="start" class="item-icon"></ion-icon>
+          <ion-label>WhatsApp</ion-label>
+          <ion-toggle
+            [checked]="notificaciones.whatsapp"
+            (ionChange)="toggleNotificacion('whatsapp')"
+            class="custom-toggle">
+          </ion-toggle>
+        </ion-item>
+
+        <ion-item class="custom-item">
+          <ion-icon name="at-outline" slot="start" class="item-icon"></ion-icon>
+          <ion-label>Email</ion-label>
+          <ion-toggle
+            [checked]="notificaciones.email"
+            (ionChange)="toggleNotificacion('email')"
+            class="custom-toggle">
+          </ion-toggle>
+        </ion-item>
+      </ion-list>
+    </div>
+
+    <!-- Acceso remoto -->
+    <div class="ajustes-section animate-fade-in-up delay-3">
+      <div class="section-header-row">
+        <ion-icon name="shield-checkmark-outline" class="section-icon"></ion-icon>
+        <h3 class="section-title">Acceso remoto</h3>
+      </div>
+
+      <ion-button
+        expand="block"
+        class="abrir-puerta-button ped-pulse-button"
+        (click)="abrirPuerta()">
+        <ion-icon name="lock-open-outline" slot="start"></ion-icon>
+        Abrir puerta principal
+      </ion-button>
+
+      <p class="nota">
+        <ion-icon name="wifi-outline"></ion-icon>
+        Solo funciona si estás conectado
+      </p>
+    </div>
+  </div>
+</ion-content>
