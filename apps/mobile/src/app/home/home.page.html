@@ -1,0 +1,100 @@
+<ion-content class="home-content">
+  <ion-header class="ion-no-border home-header animate-fade-in-up">
+    <ion-toolbar>
+      <div class="header-profile" slot="start">
+        <div class="avatar">
+          <ion-icon name="person" class="avatar-icon"></ion-icon>
+        </div>
+        <div class="header-text">
+          <ion-label class="greeting">Hola, Residente</ion-label>
+          <ion-label class="unit">{{ unidad }}</ion-label>
+        </div>
+      </div>
+      <ion-buttons slot="end">
+        <ion-button (click)="irAjustes()" class="settings-btn">
+          <ion-icon name="settings-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="home-container">
+    <!-- Stats -->
+    <div class="stats-row animate-fade-in-up delay-1">
+      <ion-card class="stat-card stat-card--primary">
+        <ion-card-content>
+          <div class="stat-icon-wrap">
+            <ion-icon name="people-outline"></ion-icon>
+          </div>
+          <div class="stat-number">{{ visitasHoy }}</div>
+          <div class="stat-label">Visitas hoy</div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card stat-card--warning">
+        <ion-card-content>
+          <div class="stat-icon-wrap">
+            <ion-icon name="time-outline"></ion-icon>
+          </div>
+          <div class="stat-number">{{ enEspera }}</div>
+          <div class="stat-label">En espera</div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Sección visitas -->
+    <div class="section-header animate-fade-in-up delay-2">
+      <h3 class="section-title">Visitas recientes</h3>
+      <ion-badge class="section-badge" *ngIf="visitasRecientes.length > 0">{{ visitasRecientes.length }}</ion-badge>
+    </div>
+
+    <!-- Lista -->
+    <div class="visitas-list" *ngIf="visitasRecientes.length > 0; else emptyState">
+      <ion-card
+        class="visita-card animate-fade-in-up"
+        [class.visita-card--espera]="visita.tipo === 'en_espera'"
+        *ngFor="let visita of visitasRecientes; let i = index"
+        [style.animation-delay]="0.22 + (i * 0.06) + 's'">
+        <ion-card-content>
+          <div class="visita-header">
+            <div class="visita-status-badge" [class.espera]="visita.tipo === 'en_espera'" [class.atendida]="visita.tipo === 'atendida'">
+              <ion-icon [name]="visita.tipo === 'en_espera' ? 'alert-circle' : 'checkmark-circle'"></ion-icon>
+              <span>{{ visita.estado }}</span>
+            </div>
+            <span class="visita-tiempo">{{ visita.tiempo }}</span>
+          </div>
+
+          <p class="visita-mensaje">{{ visita.mensaje }}</p>
+
+          <div class="visita-actions" *ngIf="visita.tipo === 'en_espera'">
+            <ion-button
+              expand="block"
+              class="action-btn action-btn--open"
+              (click)="abrirVisita(visita)">
+              <ion-icon name="lock-open-outline" slot="start"></ion-icon>
+              Abrir
+            </ion-button>
+            <ion-button
+              expand="block"
+              class="action-btn action-btn--reject"
+              (click)="rechazarVisita(visita)">
+              <ion-icon name="close-outline" slot="start"></ion-icon>
+              Rechazar
+            </ion-button>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Empty state -->
+    <ng-template #emptyState>
+      <div class="empty-state animate-fade-in-up delay-2">
+        <div class="empty-icon-wrap">
+          <ion-icon name="notifications-off-outline"></ion-icon>
+        </div>
+        <h4>Sin visitas recientes</h4>
+        <p>Cuando alguien llegue al edificio, aparecerá aquí.</p>
+      </div>
+    </ng-template>
+  </div>
+</ion-content>

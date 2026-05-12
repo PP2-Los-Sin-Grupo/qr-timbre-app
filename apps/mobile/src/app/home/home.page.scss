@@ -1,0 +1,300 @@
+.home-content {
+  --background: var(--ped-bg);
+}
+
+/* Header */
+.home-header {
+  ion-toolbar {
+    --background: transparent;
+    --border-width: 0;
+    padding: 8px 4px 4px;
+  }
+}
+
+.header-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-left: 12px;
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--ped-primary), #8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px var(--ped-primary-glow);
+}
+
+.avatar-icon {
+  font-size: 22px;
+  color: #ffffff;
+}
+
+.header-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.greeting {
+  color: var(--ped-text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.unit {
+  color: var(--ped-text-primary);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.settings-btn {
+  --color: var(--ped-text-secondary);
+  --background-activated: rgba(255, 255, 255, 0.06);
+  --border-radius: 50%;
+  width: 40px;
+  height: 40px;
+
+  ion-icon {
+    font-size: 22px;
+  }
+}
+
+/* Contenedor */
+.home-container {
+  padding: 0 16px 28px;
+}
+
+/* Stats */
+.stats-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  flex: 1;
+  margin: 0;
+  border-radius: var(--ped-radius-md);
+  border: 1px solid var(--ped-border);
+  box-shadow: var(--ped-shadow-sm);
+  overflow: hidden;
+
+  ion-card-content {
+    padding: 18px 14px;
+    text-align: center;
+  }
+}
+
+.stat-card--primary {
+  background: linear-gradient(180deg, var(--ped-primary-soft) 0%, var(--ped-surface-elevated) 60%);
+}
+
+.stat-card--warning {
+  background: linear-gradient(180deg, var(--ped-warning-soft) 0%, var(--ped-surface-elevated) 60%);
+}
+
+.stat-icon-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+  font-size: 20px;
+}
+
+.stat-card--primary .stat-icon-wrap {
+  background: var(--ped-primary-soft);
+  color: var(--ped-primary);
+}
+
+.stat-card--warning .stat-icon-wrap {
+  background: var(--ped-warning-soft);
+  color: var(--ped-warning);
+}
+
+.stat-number {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--ped-text-primary);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--ped-text-secondary);
+  font-weight: 500;
+}
+
+/* Sección */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.section-title {
+  color: var(--ped-text-secondary);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.section-badge {
+  --background: var(--ped-surface-elevated);
+  --color: var(--ped-text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 2px 8px;
+}
+
+/* Lista visitas */
+.visitas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.visita-card {
+  margin: 0;
+  background: var(--ped-surface-elevated);
+  border: 1px solid var(--ped-border);
+  border-radius: var(--ped-radius-md);
+  box-shadow: var(--ped-shadow-sm);
+  transition: transform var(--ped-transition-fast), box-shadow var(--ped-transition-fast);
+}
+
+.visita-card--espera {
+  border-color: rgba(245, 158, 11, 0.25);
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.08);
+}
+
+.visita-card:active {
+  transform: scale(0.985);
+}
+
+.visita-card ion-card-content {
+  padding: 16px;
+}
+
+.visita-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.visita-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.visita-status-badge.espera {
+  background: var(--ped-warning-soft);
+  color: var(--ped-warning);
+}
+
+.visita-status-badge.atendida {
+  background: var(--ped-success-soft);
+  color: var(--ped-success);
+}
+
+.visita-status-badge ion-icon {
+  font-size: 16px;
+}
+
+.visita-tiempo {
+  color: var(--ped-text-muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.visita-mensaje {
+  color: var(--ped-text-secondary);
+  font-size: 14px;
+  margin: 0 0 14px 0;
+  line-height: 1.45;
+}
+
+.visita-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.action-btn {
+  flex: 1;
+  margin: 0;
+  height: 42px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: none;
+  --border-radius: var(--ped-radius-sm);
+}
+
+.action-btn--open {
+  --background: linear-gradient(135deg, var(--ped-success), #16a34a);
+  --background-activated: #15803d;
+  --box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
+}
+
+.action-btn--reject {
+  --background: linear-gradient(135deg, var(--ped-danger), #dc2626);
+  --background-activated: #b91c1c;
+  --box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
+
+/* Empty state */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.empty-icon-wrap {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--ped-surface-elevated);
+  border: 1px solid var(--ped-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.empty-icon-wrap ion-icon {
+  font-size: 32px;
+  color: var(--ped-text-muted);
+}
+
+.empty-state h4 {
+  color: var(--ped-text-secondary);
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+}
+
+.empty-state p {
+  color: var(--ped-text-muted);
+  font-size: 14px;
+  margin: 0;
+  max-width: 240px;
+}

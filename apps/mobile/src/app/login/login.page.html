@@ -1,0 +1,59 @@
+<ion-content class="login-content" scroll-y="false">
+  <div class="login-bg-gradient"></div>
+
+  <div class="login-container">
+    <div class="login-header animate-fade-in-up">
+      <div class="login-icon-wrap">
+        <ion-icon name="business-outline" class="login-icon"></ion-icon>
+      </div>
+      <h1 class="login-title">Mi Edificio</h1>
+      <p class="login-subtitle">Acceso para residentes</p>
+    </div>
+
+    <div class="login-glass animate-fade-in-up delay-2">
+      <div class="login-form">
+        <ion-item class="custom-input" lines="none">
+          <ion-icon name="mail-outline" slot="start" class="input-icon"></ion-icon>
+          <ion-input
+            type="email"
+            placeholder="usuario@edificio.com"
+            [(ngModel)]="email"
+            class="input-field">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="custom-input" lines="none">
+          <ion-icon name="lock-closed-outline" slot="start" class="input-icon"></ion-icon>
+          <ion-input
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder="Contraseña"
+            [(ngModel)]="password"
+            class="input-field">
+          </ion-input>
+          <ion-button
+            fill="clear"
+            slot="end"
+            class="toggle-password"
+            (click)="togglePassword()">
+            <ion-icon
+              [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"
+              class="toggle-password-icon">
+            </ion-icon>
+          </ion-button>
+        </ion-item>
+
+        <ion-button
+          expand="block"
+          class="login-button"
+          (click)="login()">
+          <ion-icon name="log-in-outline" slot="start"></ion-icon>
+          Ingresar
+        </ion-button>
+      </div>
+    </div>
+
+    <div class="login-footer animate-fade-in-up delay-3">
+      <p>Soporte técnico provisto por <span class="brand">Softxcompany</span></p>
+    </div>
+  </div>
+</ion-content>
