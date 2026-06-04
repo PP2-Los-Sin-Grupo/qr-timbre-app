@@ -1,18 +1,28 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from './services/auth.service';
 
+const authGuard = () => {
+  const auth = inject( AuthService );
+  const router = inject( Router );
+  return auth.isLoggedIn() ? true : router.createUrlTree( [ '/login' ] );
+};
 const routes: Routes = [
   {
     path: 'login',
-    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
+    loadChildren: () => import( './login/login.module' ).then( m => m.LoginPageModule )
   },
   {
     path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
+    canActivate: [authGuard],
+    loadChildren: () => import( './home/home.module' ).then( m => m.HomePageModule )
   },
   {
     path: 'ajustes',
-    loadChildren: () => import('./ajustes/ajustes.module').then( m => m.AjustesPageModule)
+    canActivate: [authGuard],
+    loadChildren: () => import( './ajustes/ajustes.module' ).then( m => m.AjustesPageModule )
   },
   {
     path: '',
@@ -21,10 +31,10 @@ const routes: Routes = [
   },
 ];
 
-@NgModule({
+@NgModule( {
   imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot( routes, { preloadingStrategy: PreloadAllModules } )
   ],
-  exports: [RouterModule]
-})
+  exports: [ RouterModule ]
+} )
 export class AppRoutingModule { }

@@ -45,10 +45,17 @@
         <ion-button
           expand="block"
           class="login-button"
+          [disabled]="loading"
           (click)="login()">
-          <ion-icon name="log-in-outline" slot="start"></ion-icon>
-          Ingresar
+          <ion-spinner *ngIf="loading" name="crescent" slot="start"></ion-spinner>
+          <ion-icon *ngIf="!loading" name="log-in-outline" slot="start"></ion-icon>
+          {{ loading ? 'Ingresando...' : 'Ingresar' }}
         </ion-button>
+
+        <div *ngIf="errorMsg" class="error-msg">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          {{ errorMsg }}
+        </div>
       </div>
     </div>
 

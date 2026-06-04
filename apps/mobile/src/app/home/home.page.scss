@@ -2,6 +2,18 @@
   --background: var(--ped-bg);
 }
 
+.loading-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 0;
+  ion-spinner {
+    width: 40px;
+    height: 40px;
+    color: var(--ped-primary);
+  }
+}
+
 /* Header */
 .home-header {
   ion-toolbar {

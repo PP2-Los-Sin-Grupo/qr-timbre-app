@@ -6,7 +6,7 @@
           <ion-icon name="person" class="avatar-icon"></ion-icon>
         </div>
         <div class="header-text">
-          <ion-label class="greeting">Hola, Residente</ion-label>
+          <ion-label class="greeting">Hola, {{ usuario?.nombre }}</ion-label>
           <ion-label class="unit">{{ unidad }}</ion-label>
         </div>
       </div>
@@ -19,6 +19,12 @@
   </ion-header>
 
   <div class="home-container">
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading-wrap">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+
+    <ng-container *ngIf="!loading">
     <!-- Stats -->
     <div class="stats-row animate-fade-in-up delay-1">
       <ion-card class="stat-card stat-card--primary">
@@ -96,5 +102,6 @@
         <p>Cuando alguien llegue al edificio, aparecerá aquí.</p>
       </div>
     </ng-template>
+    </ng-container>
   </div>
 </ion-content>
