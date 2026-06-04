@@ -57,6 +57,7 @@ export const useDepartamentos = () => {
     piso,
     numerosPiso,
     loading,
+    pisoNroSeleccionado,
     //Funciones
     getDepartamentos,
     handleChangePiso,
