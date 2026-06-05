@@ -7,6 +7,7 @@ import {
   Firestore, doc, getDoc, updateDoc
 } from '@angular/fire/firestore';
 import { AuthService, UsuarioSession } from '../services/auth.service';
+import { TelegramService } from '../services/telegram.service';
 
 @Component({
   selector: 'app-ajustes',
@@ -15,6 +16,7 @@ import { AuthService, UsuarioSession } from '../services/auth.service';
   standalone: false,
 })
 export class AjustesPage implements OnInit {
+  nombreUsuario: string = '';
   unidad: string = '';
   telegramChatId: string = '';
   telegramVinculado: boolean = false;
@@ -31,6 +33,7 @@ export class AjustesPage implements OnInit {
   private router = inject(Router);
   private authService = inject(AuthService);
   private firestore = inject(Firestore);
+  private telegramService = inject(TelegramService);
 
   /* Al iniciar, carga el telegramChatId actual del usuario desde Firestore */
   async ngOnInit() {
@@ -42,12 +45,37 @@ export class AjustesPage implements OnInit {
       const snap = await getDoc(usuarioRef);
       if (snap.exists()) {
         const data = snap.data();
+        this.nombreUsuario = `${data['nombre']} ${data['apellido']}`;
         this.telegramChatId = data['telegramChatId'] || '';
         this.telegramVinculado = !!this.telegramChatId;
-        this.unidad = `Piso ${data['departamentoId'] || ''}`;
+
+        /* Cargar el piso y numero real del departamento */
+        const deptoId = data['departamentoId'];
+        if (deptoId) {
+          const deptoSnap = await getDoc(doc(this.firestore, 'departamentos', deptoId));
+          if (deptoSnap.exists()) {
+            const d = deptoSnap.data();
+            this.unidad = `Piso ${d['piso']} - Depto ${d['numero']}`;
+          }
+        }
       }
     } catch (e) {
       console.error('Error cargando datos de ajustes:', e);
+    }
+  }
+
+  /* Obtiene el chat ID del ultimo mensaje enviado al bot y lo rellena */
+  async obtenerMiChatId() {
+    this.mensajeEstado = 'Consultando Telegram...';
+    this.tipoMensaje = '';
+    const chatId = await this.telegramService.obtenerUltimoChatId();
+    if (chatId) {
+      this.telegramChatId = chatId;
+      this.mensajeEstado = '✅ Chat ID obtenido. Apretá "Vincular Telegram" para guardar.';
+      this.tipoMensaje = 'success';
+    } else {
+      this.mensajeEstado = '❌ No se encontraron mensajes recientes. Enviá un mensaje a @QRNoti_bot y volvé a intentar.';
+      this.tipoMensaje = 'error';
     }
   }
 

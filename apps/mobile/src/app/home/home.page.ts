@@ -120,11 +120,7 @@ export class HomePage implements OnInit, OnDestroy {
         return;
       }
 
-      /* Armar el mensaje con formato HTML */
-      const nombreVisita = data['visitante']?.nombre || 'Alguien';
-      const mensaje = `🔔 <b>${nombreVisita} tocó el timbre</b>\n\n` +
-        `Depto: ${this.unidad}\n` +
-        `Abrí la app para recibir a tu visita`;
+      const mensaje = `🔔 Tienes visitas`;
 
       const enviado = await this.telegramService.enviarMensaje(chatId, mensaje);
 

@@ -20,7 +20,7 @@
         <ion-icon name="person"></ion-icon>
       </div>
       <div class="profile-info">
-        <h2>Residente</h2>
+        <h2>{{ nombreUsuario || 'Residente' }}</h2>
         <p>{{ unidad }}</p>
       </div>
     </div>
@@ -35,9 +35,9 @@
       <!-- Formulario de vinculacion (cuando no hay chat ID guardado) -->
       <div *ngIf="!telegramVinculado" class="telegram-info">
         <p class="telegram-instrucciones">
-          1. Enviá <code>/start</code> a <strong>@TimbreQRBot</strong> en Telegram<br />
-          2. El bot te va a responder con un número (tu chat ID)<br />
-          3. Copiá ese número y pegálo abajo
+          1. Enviá <code>/start</code> (o cualquier mensaje) a <strong>@QRNoti_bot</strong> en Telegram<br />
+          2. Apretá <strong>"Obtener mi chat ID"</strong> abajo<br />
+          3. Apretá <strong>"Vincular Telegram"</strong>
         </p>
         <ion-item class="custom-item">
           <ion-icon name="key-outline" slot="start" class="item-icon"></ion-icon>
@@ -49,6 +49,10 @@
             (ionInput)="telegramChatId = $event.detail.value!"
           ></ion-input>
         </ion-item>
+        <ion-button expand="block" fill="outline" (click)="obtenerMiChatId()">
+          <ion-icon name="search-outline" slot="start"></ion-icon>
+          Obtener mi chat ID
+        </ion-button>
         <ion-button expand="block" class="action-btn action-btn--open" (click)="vincularTelegram()">
           <ion-icon name="link-outline" slot="start"></ion-icon>
           Vincular Telegram
@@ -102,8 +106,8 @@
         </ion-item>
 
         <ion-item class="custom-item">
-          <ion-icon name="logo-whatsapp" slot="start" class="item-icon"></ion-icon>
-          <ion-label>WhatsApp</ion-label>
+          <ion-icon name="paper-plane-outline" slot="start" class="item-icon"></ion-icon>
+          <ion-label>Telegram</ion-label>
           <ion-toggle
             [checked]="notificaciones.whatsapp"
             (ionChange)="toggleNotificacion('whatsapp')"
