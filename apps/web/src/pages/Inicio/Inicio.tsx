@@ -1,18 +1,74 @@
+/* Pagina de inicio para el visitante: selecciona piso y numero, luego "Llamar"
+   escribe la notificacion en Firestore y redirige a la pantalla de confirmacion */
 
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDepartamentos } from './hooks/useDepartamentos';
-import { CircularProgress, FormControl, InputLabel, MenuItem, Select, Stack, Typography } from '@mui/material';
+import { Button, CircularProgress, FormControl, InputLabel, MenuItem, Select, Stack, Typography, Alert } from '@mui/material';
+import InicioApi from './api/InicioApi';
 
 export const Inicio = () => {
   const navigate = useNavigate();
+  const [ llamando, setLlamando ] = useState( false );
+  const [ errorMsg, setErrorMsg ] = useState( '' );
   const {
     piso,
     numerosPiso,
     loading,
-    getDepartamentos,
+    pisoNroSeleccionado,
     handleChangePiso,
     handleChangeNumero
   } = useDepartamentos();
+
+  /* El boton se habilita solo cuando piso Y numero estan seleccionados */
+  const puedeLlamar = pisoNroSeleccionado?.piso && pisoNroSeleccionado?.numero;
+
+  /* Al apretar "Llamar": busca al residente en Firestore, crea la notificacion y navega */
+  const handleLlamar = async () => {
+    if ( !pisoNroSeleccionado?.piso || !pisoNroSeleccionado?.numero ) return;
+
+    setLlamando( true );
+    setErrorMsg( '' );
+
+    try {
+      /* 1. Buscar el residente del departamento seleccionado */
+      const residente = await InicioApi.obtenerResidentePorDepto(
+        pisoNroSeleccionado.piso,
+        pisoNroSeleccionado.numero
+      );
+
+      if ( residente.estado !== 'success' || !residente.data ) {
+        setErrorMsg( residente.mensaje );
+        setLlamando( false );
+        return;
+      }
+
+      /* 2. Crear la notificacion en Firestore */
+      const notificacion = await InicioApi.crearNotificacion( residente.data.id );
+
+      if ( notificacion.estado !== 'success' ) {
+        setErrorMsg( notificacion.mensaje );
+        setLlamando( false );
+        return;
+      }
+
+      /* 3. Navegar a la pantalla de exito */
+      navigate( '/FormNotificacion', {
+        state: {
+          piso: pisoNroSeleccionado.piso,
+          numero: pisoNroSeleccionado.numero,
+          residente: `${residente.data.nombre} ${residente.data.apellido}`
+        }
+      } );
+    }
+    catch {
+      setErrorMsg( 'Ocurrio un error inesperado' );
+    }
+    finally {
+      setLlamando( false );
+    }
+  };
+
   if ( loading ) return ( <CircularProgress /> );
   return (
     <Stack
@@ -29,14 +85,13 @@ export const Inicio = () => {
         <InputLabel id="id-label-piso">Piso</InputLabel>
         <Select
           id="select-piso"
-          // value={ formNotificacion }
           label="Piso"
           onChange={ e => handleChangePiso( e.target.value ) }
         >
           { piso &&
             piso.map( p => {
               return (
-                <MenuItem value={ p }>{ p }</MenuItem>
+                <MenuItem key={ p } value={ p }>{ p }</MenuItem>
               );
             } )
           }
@@ -47,14 +102,13 @@ export const Inicio = () => {
           <InputLabel id="id-label-numero">Numero</InputLabel>
           <Select
             id="select-numero"
-            // value={ formNotificacion }
             label="Numero"
             onChange={ e => handleChangeNumero( e.target.value ) }
           >
             {
               numerosPiso.map( p => {
                 return (
-                  <MenuItem value={ p }>{ p }</MenuItem>
+                  <MenuItem key={ p } value={ p }>{ p }</MenuItem>
                 );
               } )
             }
@@ -62,7 +116,18 @@ export const Inicio = () => {
         </FormControl>
       }
 
-    </Stack>
+      { errorMsg && <Alert severity="error">{ errorMsg }</Alert> }
 
+      <Button
+        variant="contained"
+        color="success"
+        size="large"
+        disabled={ !puedeLlamar || llamando }
+        onClick={ handleLlamar }
+        sx={ { width: '100%', py: 1.5, fontSize: '1.1rem' } }
+      >
+        { llamando ? 'Enviando...' : '🔔 Llamar' }
+      </Button>
+    </Stack>
   );
 };

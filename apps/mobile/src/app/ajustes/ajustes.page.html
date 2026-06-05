@@ -1,3 +1,5 @@
+<!-- Pagina de ajustes: perfil, vinculacion de Telegram, preferencias y acceso remoto -->
+
 <ion-content class="ajustes-content">
   <ion-header class="ion-no-border ajustes-header animate-fade-in-up">
     <ion-toolbar>
@@ -11,7 +13,8 @@
   </ion-header>
 
   <div class="ajustes-container">
-    <!-- Perfil mini -->
+
+    <!-- Perfil del residente -->
     <div class="profile-card animate-fade-in-up delay-1">
       <div class="profile-avatar">
         <ion-icon name="person"></ion-icon>
@@ -22,8 +25,56 @@
       </div>
     </div>
 
-    <!-- Notificaciones -->
+    <!-- Seccion Telegram: permite vincular o desvincular el chat ID -->
     <div class="ajustes-section animate-fade-in-up delay-2">
+      <div class="section-header-row">
+        <ion-icon name="paper-plane-outline" class="section-icon"></ion-icon>
+        <h3 class="section-title">Telegram</h3>
+      </div>
+
+      <!-- Formulario de vinculacion (cuando no hay chat ID guardado) -->
+      <div *ngIf="!telegramVinculado" class="telegram-info">
+        <p class="telegram-instrucciones">
+          1. Enviá <code>/start</code> a <strong>@TimbreQRBot</strong> en Telegram<br />
+          2. El bot te va a responder con un número (tu chat ID)<br />
+          3. Copiá ese número y pegálo abajo
+        </p>
+        <ion-item class="custom-item">
+          <ion-icon name="key-outline" slot="start" class="item-icon"></ion-icon>
+          <ion-input
+            [value]="telegramChatId"
+            placeholder="Ej: 1168091764"
+            label="Chat ID"
+            labelPlacement="floating"
+            (ionInput)="telegramChatId = $event.detail.value!"
+          ></ion-input>
+        </ion-item>
+        <ion-button expand="block" class="action-btn action-btn--open" (click)="vincularTelegram()">
+          <ion-icon name="link-outline" slot="start"></ion-icon>
+          Vincular Telegram
+        </ion-button>
+      </div>
+
+      <!-- Estado vinculado (cuando ya tiene chat ID) -->
+      <div *ngIf="telegramVinculado" class="telegram-vinculado">
+        <ion-item class="custom-item">
+          <ion-icon name="checkmark-circle" slot="start" color="success" class="item-icon"></ion-icon>
+          <ion-label>✅ Vinculado: {{ telegramChatId }}</ion-label>
+        </ion-item>
+        <ion-button expand="block" color="danger" fill="outline" (click)="desvincularTelegram()">
+          <ion-icon name="unlink-outline" slot="start"></ion-icon>
+          Desvincular
+        </ion-button>
+      </div>
+
+      <!-- Mensaje de exito o error -->
+      <ion-text *ngIf="mensajeEstado" [color]="tipoMensaje === 'success' ? 'success' : 'danger'">
+        <p class="mensaje-estado">{{ mensajeEstado }}</p>
+      </ion-text>
+    </div>
+
+    <!-- Preferencias de notificacion -->
+    <div class="ajustes-section animate-fade-in-up delay-3">
       <div class="section-header-row">
         <ion-icon name="notifications-outline" class="section-icon"></ion-icon>
         <h3 class="section-title">Notificaciones</h3>
@@ -72,8 +123,8 @@
       </ion-list>
     </div>
 
-    <!-- Acceso remoto -->
-    <div class="ajustes-section animate-fade-in-up delay-3">
+    <!-- Acceso remoto: boton para abrir la puerta -->
+    <div class="ajustes-section animate-fade-in-up delay-4">
       <div class="section-header-row">
         <ion-icon name="shield-checkmark-outline" class="section-icon"></ion-icon>
         <h3 class="section-title">Acceso remoto</h3>

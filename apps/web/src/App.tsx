@@ -2,7 +2,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Inicio } from './pages/Inicio/Inicio';
 import { FormNotificacion } from './pages/FormNotificacion/FormNotificacion';
-import { AppBar, Button, IconButton, Stack, Toolbar, Typography } from '@mui/material';
+import { AppBar, Stack, Toolbar, Typography } from '@mui/material';
 
 export const App = () => {
   return (

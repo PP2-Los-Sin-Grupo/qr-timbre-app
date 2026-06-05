@@ -1,4 +1,4 @@
-<ion-content class="login-content" scroll-y="false">
+<ion-content class="login-content" scroll-y="true">
   <div class="login-bg-gradient"></div>
 
   <div class="login-container">
@@ -11,7 +11,9 @@
     </div>
 
     <div class="login-glass animate-fade-in-up delay-2">
-      <div class="login-form">
+
+      <!-- Formulario de inicio de sesion -->
+      <div class="login-form" *ngIf="modo === 'login'">
         <ion-item class="custom-input" lines="none">
           <ion-icon name="mail-outline" slot="start" class="input-icon"></ion-icon>
           <ion-input
@@ -52,14 +54,166 @@
           {{ loading ? 'Ingresando...' : 'Ingresar' }}
         </ion-button>
 
-        <div *ngIf="errorMsg" class="error-msg">
-          <ion-icon name="alert-circle-outline"></ion-icon>
-          {{ errorMsg }}
+        <div class="form-links">
+          <span class="link-btn" (click)="setModo('register')">¿No tenés cuenta? Registrate</span>
         </div>
       </div>
+
+      <!-- Formulario de registro de nuevo residente -->
+      <div class="login-form" *ngIf="modo === 'register'">
+        <ion-item class="custom-input" lines="none">
+          <ion-icon name="person-outline" slot="start" class="input-icon"></ion-icon>
+          <ion-input
+            type="text"
+            placeholder="Nombre"
+            [(ngModel)]="regNombre"
+            class="input-field">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="custom-input" lines="none">
+          <ion-icon name="person-outline" slot="start" class="input-icon"></ion-icon>
+          <ion-input
+            type="text"
+            placeholder="Apellido"
+            [(ngModel)]="regApellido"
+            class="input-field">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="custom-input" lines="none">
+          <ion-icon name="mail-outline" slot="start" class="input-icon"></ion-icon>
+          <ion-input
+            type="email"
+            placeholder="Email"
+            [(ngModel)]="regEmail"
+            class="input-field">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="custom-input" lines="none">
+          <ion-icon name="lock-closed-outline" slot="start" class="input-icon"></ion-icon>
+          <ion-input
+            type="password"
+            placeholder="Contraseña"
+            [(ngModel)]="regPassword"
+            class="input-field">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="custom-input" lines="none">
+          <ion-icon name="lock-closed-outline" slot="start" class="input-icon"></ion-icon>
+          <ion-input
+            type="password"
+            placeholder="Repetir contraseña"
+            [(ngModel)]="regConfirmPassword"
+            class="input-field">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="custom-input" lines="none">
+          <ion-icon name="business-outline" slot="start" class="input-icon"></ion-icon>
+          <ion-select
+            placeholder="Seleccioná tu departamento"
+            [(ngModel)]="regDepartamentoId"
+            class="input-field">
+            <ion-select-option *ngFor="let d of departamentos" [value]="d.id">
+              {{ d.label }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-button
+          expand="block"
+          class="login-button"
+          [disabled]="loading"
+          (click)="register()">
+          <ion-spinner *ngIf="loading" name="crescent" slot="start"></ion-spinner>
+          <ion-icon *ngIf="!loading" name="person-add-outline" slot="start"></ion-icon>
+          {{ loading ? 'Registrando...' : 'Registrarse' }}
+        </ion-button>
+
+        <div class="form-links">
+          <span class="link-btn" (click)="setModo('login')">¿Ya tenés cuenta? Iniciar sesión</span>
+        </div>
+      </div>
+
+      <!-- Formulario de cambio de contraseña -->
+      <div class="login-form" *ngIf="modo === 'cambiar-password'">
+        <ion-item class="custom-input" lines="none">
+          <ion-icon name="mail-outline" slot="start" class="input-icon"></ion-icon>
+          <ion-input
+            type="email"
+            placeholder="Email"
+            [(ngModel)]="cambioEmail"
+            class="input-field">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="custom-input" lines="none">
+          <ion-icon name="lock-closed-outline" slot="start" class="input-icon"></ion-icon>
+          <ion-input
+            type="password"
+            placeholder="Contraseña actual"
+            [(ngModel)]="cambioCurrentPassword"
+            class="input-field">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="custom-input" lines="none">
+          <ion-icon name="lock-open-outline" slot="start" class="input-icon"></ion-icon>
+          <ion-input
+            type="password"
+            placeholder="Contraseña nueva"
+            [(ngModel)]="cambioNewPassword"
+            class="input-field">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="custom-input" lines="none">
+          <ion-icon name="lock-open-outline" slot="start" class="input-icon"></ion-icon>
+          <ion-input
+            type="password"
+            placeholder="Repetir contraseña nueva"
+            [(ngModel)]="cambioConfirmPassword"
+            class="input-field">
+          </ion-input>
+        </ion-item>
+
+        <ion-button
+          expand="block"
+          class="login-button"
+          [disabled]="loading"
+          (click)="cambiarPassword()">
+          <ion-spinner *ngIf="loading" name="crescent" slot="start"></ion-spinner>
+          <ion-icon *ngIf="!loading" name="key-outline" slot="start"></ion-icon>
+          {{ loading ? 'Cambiando...' : 'Cambiar contraseña' }}
+        </ion-button>
+
+        <div class="form-links">
+          <span class="link-btn" (click)="setModo('login')">Volver al inicio de sesión</span>
+        </div>
+      </div>
+
+      <!-- Mensajes de error / éxito (compartidos) -->
+      <div *ngIf="errorMsg" class="error-msg">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        {{ errorMsg }}
+      </div>
+      <div *ngIf="successMsg" class="success-msg">
+        <ion-icon name="checkmark-circle-outline"></ion-icon>
+        {{ successMsg }}
+      </div>
+
     </div>
 
+    <!-- Footer y enlaces adicionales -->
     <div class="login-footer animate-fade-in-up delay-3">
+      <div class="footer-links" *ngIf="modo === 'register'">
+        <span class="link-btn link-btn--small" (click)="setModo('cambiar-password')">
+          🔑 Cambiar contraseña
+        </span>
+      </div>
       <p>Soporte técnico provisto por <span class="brand">Softxcompany</span></p>
     </div>
   </div>
