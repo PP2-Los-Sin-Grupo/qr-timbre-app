@@ -80,6 +80,7 @@ export const useDepartamentos = () => {
     numerosPiso,
     loading,
     pisoNroSeleccionado,
+    //Funciones
     getDepartamentos,
     handleChangePiso,
     handleChangeNumero
