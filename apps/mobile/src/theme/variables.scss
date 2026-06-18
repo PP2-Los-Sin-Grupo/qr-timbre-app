@@ -12,6 +12,7 @@
   --ped-text-primary: #f0f0f5;
   --ped-text-secondary: #a0a0b8;
   --ped-text-muted: #6e6e8a;
+  --ped-icon-muted: #6e6e8a;
 
   --ped-primary: #6366f1;
   --ped-primary-soft: rgba(99, 102, 241, 0.15);
@@ -49,6 +50,42 @@
   --ion-color-warning: var(--ped-warning);
   --ion-color-danger: var(--ped-danger);
   --ion-toolbar-background: transparent;
+  --ion-toolbar-color: var(--ped-text-primary);
+  --ion-item-background: transparent;
+  --ion-card-background: var(--ped-surface-elevated);
+}
+
+/* Modo claro (cuando NO esta activa la clase ion-palette-dark) */
+:root:not(.ion-palette-dark) {
+  --ped-bg-deep: #eff3ff;
+  --ped-bg: #f6f8ff;
+  --ped-surface: #ffffff;
+  --ped-surface-elevated: #ffffff;
+  --ped-border: rgba(15, 23, 42, 0.08);
+
+  --ped-text-primary: #0f172a;
+  --ped-text-secondary: #334155;
+  --ped-text-muted: #64748b;
+  --ped-icon-muted: #cfe2ff;
+
+  --ped-primary: #aca9de;
+  --ped-primary-soft: rgba(79, 70, 229, 0.12);
+  --ped-primary-glow: rgba(79, 70, 229, 0.28);
+
+  --ped-success: #16a34a;
+  --ped-success-soft: rgba(22, 163, 74, 0.12);
+  --ped-danger: #dc2626;
+  --ped-danger-soft: rgba(220, 38, 38, 0.12);
+  --ped-warning: #d97706;
+  --ped-warning-soft: rgba(217, 119, 6, 0.12);
+
+  --ped-shadow-sm: 0 4px 10px rgba(15, 23, 42, 0.08);
+  --ped-shadow-md: 0 10px 26px rgba(15, 23, 42, 0.12);
+  --ped-shadow-lg: 0 16px 40px rgba(15, 23, 42, 0.16);
+
+  --ion-background-color: var(--ped-bg);
+  --ion-text-color: var(--ped-text-primary);
+  --ion-toolbar-background: rgba(255, 255, 255, 0.92);
   --ion-toolbar-color: var(--ped-text-primary);
   --ion-item-background: transparent;
   --ion-card-background: var(--ped-surface-elevated);

@@ -6,8 +6,9 @@ import { Router } from '@angular/router';
 import {
   Firestore, doc, getDoc, updateDoc
 } from '@angular/fire/firestore';
-import { AuthService, UsuarioSession } from '../services/auth.service';
+import { AuthService } from '../services/auth.service';
 import { TelegramService } from '../services/telegram.service';
+import { ThemeService } from '../services/theme.service';
 
 @Component({
   selector: 'app-ajustes',
@@ -22,6 +23,7 @@ export class AjustesPage implements OnInit {
   telegramVinculado: boolean = false;
   mensajeEstado: string = '';
   tipoMensaje: 'success' | 'error' | '' = '';
+  darkModeEnabled: boolean = false;
 
   notificaciones = {
     recibirAvisos: true,
@@ -34,9 +36,12 @@ export class AjustesPage implements OnInit {
   private authService = inject(AuthService);
   private firestore = inject(Firestore);
   private telegramService = inject(TelegramService);
+  private themeService = inject(ThemeService);
 
   /* Al iniciar, carga el telegramChatId actual del usuario desde Firestore */
   async ngOnInit() {
+    this.darkModeEnabled = this.themeService.isDarkMode();
+
     const usuario = this.authService.getCurrentUser();
     if (!usuario) return;
 
@@ -124,6 +129,11 @@ export class AjustesPage implements OnInit {
 
   toggleNotificacion(key: string) {
     this.notificaciones[key as keyof typeof this.notificaciones] = !this.notificaciones[key as keyof typeof this.notificaciones];
+  }
+
+  toggleDarkMode() {
+    this.darkModeEnabled = !this.darkModeEnabled;
+    this.themeService.setDarkMode(this.darkModeEnabled);
   }
 
   abrirPuerta() {

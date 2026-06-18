@@ -9,6 +9,11 @@
         </ion-button>
       </ion-buttons>
       <ion-title>Ajustes</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="toggleDarkMode()" class="theme-btn" aria-label="Cambiar tema">
+          <ion-icon [name]="darkModeEnabled ? 'sunny-outline' : 'moon-outline'"></ion-icon>
+        </ion-button>
+      </ion-buttons>
     </ion-toolbar>
   </ion-header>
 

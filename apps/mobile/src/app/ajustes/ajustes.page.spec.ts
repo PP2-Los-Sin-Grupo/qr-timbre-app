@@ -10,6 +10,7 @@ import { Firestore } from '@angular/fire/firestore';
 import { AjustesPage } from './ajustes.page';
 import { AuthService } from '../services/auth.service';
 import { TelegramService } from '../services/telegram.service';
+import { ThemeService } from '../services/theme.service';
 
 describe('AjustesPage', () => {
   let component: AjustesPage;
@@ -17,11 +18,14 @@ describe('AjustesPage', () => {
   let routerSpy: jasmine.SpyObj<Router>;
   let authServiceSpy: jasmine.SpyObj<AuthService>;
   let telegramServiceSpy: jasmine.SpyObj<TelegramService>;
+  let themeServiceSpy: jasmine.SpyObj<ThemeService>;
 
   beforeEach(async () => {
     routerSpy = jasmine.createSpyObj<Router>('Router', ['navigate']);
     authServiceSpy = jasmine.createSpyObj<AuthService>('AuthService', ['getCurrentUser']);
     telegramServiceSpy = jasmine.createSpyObj<TelegramService>('TelegramService', ['obtenerUltimoChatId']);
+    themeServiceSpy = jasmine.createSpyObj<ThemeService>('ThemeService', ['isDarkMode', 'setDarkMode']);
+    themeServiceSpy.isDarkMode.and.returnValue(true);
 
     authServiceSpy.getCurrentUser.and.returnValue({
       id: 'u1',
@@ -39,6 +43,7 @@ describe('AjustesPage', () => {
         { provide: Router, useValue: routerSpy },
         { provide: AuthService, useValue: authServiceSpy },
         { provide: TelegramService, useValue: telegramServiceSpy },
+        { provide: ThemeService, useValue: themeServiceSpy },
         { provide: Firestore, useValue: {} },
       ],
       schemas: [NO_ERRORS_SCHEMA],
@@ -50,6 +55,15 @@ describe('AjustesPage', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should initialize dark mode state from theme service', async () => {
+    authServiceSpy.getCurrentUser.and.returnValue(null);
+
+    await component.ngOnInit();
+
+    expect(themeServiceSpy.isDarkMode).toHaveBeenCalled();
+    expect(component.darkModeEnabled).toBeTrue();
   });
 
   it('should toggle notification flag', () => {
@@ -91,5 +105,14 @@ describe('AjustesPage', () => {
     component.volver();
 
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/home']);
+  });
+
+  it('should toggle dark mode and persist with service', () => {
+    component.darkModeEnabled = false;
+
+    component.toggleDarkMode();
+
+    expect(component.darkModeEnabled).toBeTrue();
+    expect(themeServiceSpy.setDarkMode).toHaveBeenCalledWith(true);
   });
 });

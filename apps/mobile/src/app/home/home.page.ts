@@ -10,6 +10,7 @@ import {
 } from '@angular/fire/firestore';
 import { AuthService, UsuarioSession } from '../services/auth.service';
 import { TelegramService } from '../services/telegram.service';
+import { ThemeService } from '../services/theme.service';
 
 interface Visita {
   id: string;
@@ -32,14 +33,18 @@ export class HomePage implements OnInit, OnDestroy {
   enEspera: number = 0;
   visitasRecientes: Visita[] = [];
   loading: boolean = true;
+  darkModeEnabled: boolean = false;
 
   private router = inject(Router);
   private authService = inject(AuthService);
   private firestore = inject(Firestore);
   private telegramService = inject(TelegramService);
+  private themeService = inject(ThemeService);
   private unsubscribeNotif: Unsubscribe | null = null;
 
   async ngOnInit() {
+    this.darkModeEnabled = this.themeService.isDarkMode();
+
     this.usuario = this.authService.getCurrentUser();
     if (!this.usuario) return;
 
@@ -50,6 +55,10 @@ export class HomePage implements OnInit, OnDestroy {
       console.error('Error cargando datos del home:', e);
       this.loading = false;
     }
+  }
+
+  ionViewWillEnter() {
+    this.darkModeEnabled = this.themeService.isDarkMode();
   }
 
   /* Escucha en tiempo real los cambios en la coleccion notificaciones del usuario */
@@ -198,6 +207,11 @@ export class HomePage implements OnInit, OnDestroy {
 
   irAjustes() {
     this.router.navigate(['/ajustes']);
+  }
+
+  toggleDarkMode() {
+    this.darkModeEnabled = !this.darkModeEnabled;
+    this.themeService.setDarkMode(this.darkModeEnabled);
   }
 
   ngOnDestroy() {
