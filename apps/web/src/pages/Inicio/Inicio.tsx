@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDepartamentos } from './hooks/useDepartamentos';
 import InicioApi from './api/InicioApi';
-import { Alert, Button, CircularProgress, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Select, Stack, Switch, Typography } from '@mui/material';
+import { Alert, Button, CircularProgress, FormControl, InputLabel, MenuItem, Select, Stack, Typography } from '@mui/material';
 
 export const Inicio = () => {
   const navigate = useNavigate();
@@ -139,7 +139,9 @@ export const Inicio = () => {
         </FormControl>
       };
 
-      {/* { errorMsg && <Alert severity="error">{ errorMsg }</Alert>; }
+      { errorMsg && <Alert severity="error">{ errorMsg }</Alert> }
+
+      {/*
       { pisoNroSeleccionado && pisoNroSeleccionado.piso && pisoNroSeleccionado.numero &&
         <>
           <FormGroup>

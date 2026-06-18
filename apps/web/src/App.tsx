@@ -4,9 +4,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Inicio } from './pages/Inicio/Inicio';
 import { FormNotificacion } from './pages/FormNotificacion/FormNotificacion';
 import { AppBar, Stack, Toolbar, Typography, IconButton } from '@mui/material';
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
+import { createAppTheme } from './theme/appTheme';
 
 export const App = () => {
   const [darkMode, setDarkMode] = useState<boolean>(
@@ -19,15 +20,7 @@ export const App = () => {
     localStorage.setItem("theme", newMode ? "dark" : "light");
   };
 
-  const theme = useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode: darkMode ? "dark" : "light",
-        },
-      }),
-    [darkMode]
-  );
+  const theme = useMemo(() => createAppTheme(darkMode), [darkMode]);
 
   return (
     <ThemeProvider theme={theme}>
