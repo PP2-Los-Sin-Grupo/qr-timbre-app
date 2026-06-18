@@ -1,4 +1,12 @@
 <ion-content class="login-content" scroll-y="true">
+  <ion-button
+    fill="clear"
+    class="theme-fab animate-fade-in"
+    aria-label="Cambiar tema"
+    (click)="toggleDarkMode()">
+    <ion-icon [name]="darkModeEnabled ? 'sunny-outline' : 'moon-outline'"></ion-icon>
+  </ion-button>
+
   <div class="login-bg-gradient"></div>
 
   <div class="login-container">
