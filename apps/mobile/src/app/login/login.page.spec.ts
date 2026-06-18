@@ -9,12 +9,14 @@ import { Firestore } from '@angular/fire/firestore';
 
 import { LoginPage } from './login.page';
 import { AuthService } from '../services/auth.service';
+import { ThemeService } from '../services/theme.service';
 
 describe('LoginPage', () => {
   let component: LoginPage;
   let fixture: ComponentFixture<LoginPage>;
   let routerSpy: jasmine.SpyObj<Router>;
   let authServiceSpy: jasmine.SpyObj<AuthService>;
+  let themeServiceSpy: jasmine.SpyObj<ThemeService>;
 
   beforeEach(async () => {
     routerSpy = jasmine.createSpyObj<Router>('Router', ['navigate']);
@@ -26,6 +28,8 @@ describe('LoginPage', () => {
     authServiceSpy.login.and.returnValue(Promise.resolve());
     authServiceSpy.register.and.returnValue(Promise.resolve());
     authServiceSpy.cambiarPassword.and.returnValue(Promise.resolve());
+    themeServiceSpy = jasmine.createSpyObj<ThemeService>('ThemeService', ['isDarkMode', 'setDarkMode']);
+    themeServiceSpy.isDarkMode.and.returnValue(true);
 
     await TestBed.configureTestingModule({
       declarations: [LoginPage],
@@ -33,6 +37,7 @@ describe('LoginPage', () => {
       providers: [
         { provide: Router, useValue: routerSpy },
         { provide: AuthService, useValue: authServiceSpy },
+        { provide: ThemeService, useValue: themeServiceSpy },
         { provide: Firestore, useValue: {} },
       ],
       schemas: [NO_ERRORS_SCHEMA],
@@ -52,6 +57,15 @@ describe('LoginPage', () => {
     component.togglePassword();
 
     expect(component.showPassword).toBeTrue();
+  });
+
+  it('should toggle dark mode and persist preference', () => {
+    component.darkModeEnabled = false;
+
+    component.toggleDarkMode();
+
+    expect(component.darkModeEnabled).toBeTrue();
+    expect(themeServiceSpy.setDarkMode).toHaveBeenCalledWith(true);
   });
 
   it('should validate empty login fields', async () => {
