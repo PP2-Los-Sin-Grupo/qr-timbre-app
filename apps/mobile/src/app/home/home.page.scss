@@ -75,6 +75,18 @@
   }
 }
 
+.theme-btn {
+  --color: var(--ped-text-secondary);
+  --background-activated: rgba(255, 255, 255, 0.06);
+  --border-radius: 50%;
+  width: 40px;
+  height: 40px;
+
+  ion-icon {
+    font-size: 22px;
+  }
+}
+
 /* Contenedor */
 .home-container {
   padding: 0 16px 28px;
@@ -294,7 +306,7 @@
 
 .empty-icon-wrap ion-icon {
   font-size: 32px;
-  color: var(--ped-text-muted);
+  color: var(--ped-icon-muted);
 }
 
 .empty-state h4 {

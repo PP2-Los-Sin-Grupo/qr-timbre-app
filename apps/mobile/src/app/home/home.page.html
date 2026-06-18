@@ -11,6 +11,9 @@
         </div>
       </div>
       <ion-buttons slot="end">
+        <ion-button (click)="toggleDarkMode()" class="theme-btn" aria-label="Cambiar tema">
+          <ion-icon [name]="darkModeEnabled ? 'sunny-outline' : 'moon-outline'"></ion-icon>
+        </ion-button>
         <ion-button (click)="irAjustes()" class="settings-btn">
           <ion-icon name="settings-outline"></ion-icon>
         </ion-button>

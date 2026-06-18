@@ -5,6 +5,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { Firestore, collection, getDocs } from '@angular/fire/firestore';
+import { ThemeService } from '../services/theme.service';
 
 interface DeptoOption {
   id: string;
@@ -45,14 +46,21 @@ export class LoginPage implements OnInit {
   loading: boolean = false;
   errorMsg: string = '';
   successMsg: string = '';
+  darkModeEnabled: boolean = false;
 
   private router = inject(Router);
   private authService = inject(AuthService);
   private firestore = inject(Firestore);
+  private themeService = inject(ThemeService);
 
   /* Al iniciar, carga los departamentos disponibles (no ocupados) */
   async ngOnInit() {
+    this.darkModeEnabled = this.themeService.isDarkMode();
     await this.cargarDepartamentos();
+  }
+
+  ionViewWillEnter() {
+    this.darkModeEnabled = this.themeService.isDarkMode();
   }
 
   /* Obtiene los departamentos de Firestore filtrando los que ya tienen residente */
@@ -182,5 +190,10 @@ export class LoginPage implements OnInit {
 
   togglePassword() {
     this.showPassword = !this.showPassword;
+  }
+
+  toggleDarkMode() {
+    this.darkModeEnabled = !this.darkModeEnabled;
+    this.themeService.setDarkMode(this.darkModeEnabled);
   }
 }
