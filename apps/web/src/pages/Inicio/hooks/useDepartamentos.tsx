@@ -9,7 +9,8 @@ import type { IDepto } from '../interface/Inicio.interface';
 export const useDepartamentos = () => {
   const [ depto, setDepto ] = useState<Array<IDepto> | null>( null );
   const [ piso, setPiso ] = useState<Array<string> | null>( null );
-  const [ loading, setLoading ] = useState<boolean>( false );
+  const [ loading, setLoading ] = useState<boolean>( true );
+  const [ error, setError ] = useState<string | null>( null );
   const [ numerosPiso, setNumerosPiso ] = useState<Array<string> | null>( null );
   const [ pisoNroSeleccionado, setPisoNroSeleccionado ] = useState<{
     piso: string;
@@ -18,16 +19,20 @@ export const useDepartamentos = () => {
 
   const getDepartamentos = async () => {
     setLoading( true );
+    setError( null );
     try {
       const resDeptos = await InicioApi.obtenerDepartamentos();
       if ( resDeptos.estado === 'success' ) {
         setDepto( resDeptos.data ?? null );
         const pisos = [ ...new Set( resDeptos.data?.map( d => d.piso ) ) ];
         setPiso( pisos.length > 0 ? pisos : null );
+      } else {
+        setError( resDeptos.mensaje );
       }
     }
-    catch {
-      console.log( "Ocurrio un error" );
+    catch ( e ) {
+      console.error( "Error al cargar departamentos:", e );
+      setError( 'No se pudo conectar con el servidor. Intenta de nuevo.' );
     }
     finally {
       setLoading( false );
@@ -56,16 +61,20 @@ export const useDepartamentos = () => {
   useEffect( () => {
     async function fetchData() {
       setLoading( true );
+      setError( null );
       try {
         const resDeptos = await InicioApi.obtenerDepartamentos();
         if ( resDeptos.estado === 'success' ) {
           setDepto( resDeptos.data ?? null );
           const pisos = [ ...new Set( resDeptos.data?.map( d => d.piso ) ) ];
           setPiso( pisos.length > 0 ? pisos : null );
+        } else {
+          setError( resDeptos.mensaje );
         }
       }
-      catch {
-        console.log( "Ocurrio un error" );
+      catch ( e ) {
+        console.error( "Error al cargar departamentos:", e );
+        setError( 'No se pudo conectar con el servidor. Intenta de nuevo.' );
       }
       finally {
         setLoading( false );
@@ -76,6 +85,7 @@ export const useDepartamentos = () => {
 
   return {
     depto,
+    error,
     piso,
     numerosPiso,
     loading,

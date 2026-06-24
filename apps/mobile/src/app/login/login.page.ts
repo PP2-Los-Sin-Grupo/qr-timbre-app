@@ -53,10 +53,9 @@ export class LoginPage implements OnInit {
   private firestore = inject(Firestore);
   private themeService = inject(ThemeService);
 
-  /* Al iniciar, carga los departamentos disponibles (no ocupados) */
-  async ngOnInit() {
+  /* Al iniciar, solo carga el tema. Los departamentos se cargan al abrir el modo registro */
+  ngOnInit() {
     this.darkModeEnabled = this.themeService.isDarkMode();
-    await this.cargarDepartamentos();
   }
 
   ionViewWillEnter() {
@@ -90,6 +89,10 @@ export class LoginPage implements OnInit {
     this.modo = modo;
     this.errorMsg = '';
     this.successMsg = '';
+    /* Carga los departamentos solo cuando se abre el formulario de registro */
+    if ( modo === 'register' && this.departamentos.length === 0 ) {
+      this.cargarDepartamentos();
+    }
   }
 
   /* Inicia sesion con email y contraseña */
