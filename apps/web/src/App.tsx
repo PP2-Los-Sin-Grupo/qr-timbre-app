@@ -8,6 +8,10 @@ import { ThemeProvider } from "@mui/material/styles";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { createAppTheme } from './theme/appTheme';
+import DashboardPage from './panel_admin/dashboard/DashboardPage';
+import GestionUsuarioPage from './panel_admin/gestion_usuario/GestionUsuarioPage';
+import CrearUsuarioPage from './panel_admin/crear_usuario/CrearUsuarioPage';
+import { ProveedorUsuarios } from './panel_admin/contexto/UsuariosContexto';
 
 export const App = () => {
   const [darkMode, setDarkMode] = useState<boolean>(
@@ -48,17 +52,24 @@ export const App = () => {
           </Toolbar>
         </AppBar>
 
+        
+
         <BrowserRouter>
+        <ProveedorUsuarios>
           <Routes>
+            
             <Route path="/" element={<Inicio />} />
             <Route path="/Inicio" element={<Inicio />} />
-            <Route
-              path="/FormNotificacion"
-              element={<FormNotificacion />}
-            />
+            <Route path="/FormNotificacion" element={<FormNotificacion />} />
+
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/gestion-usuarios" element={<GestionUsuarioPage />} />
+            <Route path="/crear-usuario" element={<CrearUsuarioPage />} />
           </Routes>
+          </ProveedorUsuarios>
         </BrowserRouter>
       </Stack>
     </ThemeProvider>
   );
 };
+
