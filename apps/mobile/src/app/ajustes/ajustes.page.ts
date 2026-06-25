@@ -12,7 +12,7 @@ export class AjustesPage {
   notificaciones = {
     recibirAvisos: true,
     push: true,
-    whatsapp: true,
+    telegram: true,
     email: false
   };
 

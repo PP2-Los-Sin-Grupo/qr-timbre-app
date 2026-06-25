@@ -1,17 +1,36 @@
 import { useState } from "react";
 
+interface DepartamentoData {
+  id: number;
+  numero: string;
+  piso: string;
+}
+
+interface EdificioData {
+  id: number;
+  nombre: string;
+  direccion: string;
+  qr_uuid: string;
+  departamentos: DepartamentoData[];
+}
+
 interface SeleccionarDepartamentoPageProps {
+  edificio: EdificioData;
   onLlamar: (depto: number) => void;
   onVolver: () => void;
 }
 
+const API_URL = (import.meta.env.VITE_API_URL as string) || "http://localhost:4000";
+
 export const SeleccionarDepartamentoPage = ({
+  edificio,
   onLlamar,
   onVolver,
 }: SeleccionarDepartamentoPageProps) => {
   const [deptoSeleccionado, setDeptoSeleccionado] = useState<number | null>(null);
+  const [sending, setSending] = useState(false);
 
-  const departamentos = [1, 2, 3, 4, 5, 6, 7, 8];
+  const departamentos = edificio.departamentos;
 
   return (
     <div style={styles.container}>
@@ -30,14 +49,14 @@ export const SeleccionarDepartamentoPage = ({
         <div style={styles.grid}>
           {departamentos.map((depto) => (
             <button
-              key={depto}
+              key={depto.id}
               style={{
                 ...styles.deptoButton,
-                ...(deptoSeleccionado === depto ? styles.deptoButtonSelected : {}),
+                ...(deptoSeleccionado === depto.id ? styles.deptoButtonSelected : {}),
               }}
-              onClick={() => setDeptoSeleccionado(depto)}
+              onClick={() => setDeptoSeleccionado(depto.id)}
             >
-              {depto}
+              {depto.numero}
             </button>
           ))}
         </div>
@@ -48,12 +67,27 @@ export const SeleccionarDepartamentoPage = ({
             ...(deptoSeleccionado === null ? styles.callButtonDisabled : {}),
           }}
           disabled={deptoSeleccionado === null}
-          onClick={() => deptoSeleccionado && onLlamar(deptoSeleccionado)}
+          onClick={async () => {
+            if (!deptoSeleccionado) return;
+            try {
+              setSending(true);
+              await fetch(`${API_URL}/api/visitas`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ departamento_id: deptoSeleccionado }),
+              });
+            } catch (e) {
+              console.error('Error al notificar:', e);
+            } finally {
+              setSending(false);
+              onLlamar(deptoSeleccionado);
+            }
+          }}
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{ marginRight: "10px" }}>
             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
-          Llamar
+          {sending ? 'Enviando...' : 'Llamar'}
         </button>
       </div>
     </div>
