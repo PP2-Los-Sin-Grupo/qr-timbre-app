@@ -1,0 +1,46 @@
+body{
+  margin:0;
+  padding:0;
+}
+
+.contenedor-usuarios {
+  width:100vw;
+  height:100vh;
+  background: #0f172a;
+  min-height: 100vh;
+  color: white;
+  padding: 40px;
+}
+
+.encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.boton-agregar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 25px;
+}
+
+input {
+  width: 100%;
+  margin-top: 20px;
+  padding: 14px;
+}
+
+
+.lista-usuarios {
+  margin-top: 30px;
+}
+
+.usuario {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}

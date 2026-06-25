@@ -1,0 +1,23 @@
+.contenedor-crear {
+    width: 100vw;
+    height:100vh;
+  background: #0f172a;
+  min-height: 100vh;
+  color: white;
+  padding: 40px;
+}
+
+.contenedor-crear input {
+  width: 100%;
+  display: block;
+  margin-bottom: 20px;
+  padding: 14px;
+}
+
+.contenedor-crear button {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+}
