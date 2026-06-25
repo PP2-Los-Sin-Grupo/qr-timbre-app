@@ -14,7 +14,7 @@ export const environment = {
   },
   telegramBotToken: '8901284964:AAExogULvAZ4Ufn4ugyuOICtthZW9k320Cs',
   // URL del panel de administración (app web). Los admins son redirigidos aquí al iniciar sesión.
-  adminPanelUrl: 'http://localhost:5173'
+  adminPanelUrl: 'http://localhost:5173/login'
 };
 
 /*

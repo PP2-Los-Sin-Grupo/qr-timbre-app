@@ -12,6 +12,8 @@ import DashboardPage from './panel_admin/dashboard/DashboardPage';
 import GestionUsuarioPage from './panel_admin/gestion_usuario/GestionUsuarioPage';
 import CrearUsuarioPage from './panel_admin/crear_usuario/CrearUsuarioPage';
 import { ProveedorUsuarios } from './panel_admin/contexto/UsuariosContexto';
+import LoginPage from './auth/LoginPage';
+import RutaProtegida from './auth/RutaProtegida';
 
 export const App = () => {
   const [darkMode, setDarkMode] = useState<boolean>(
@@ -62,9 +64,32 @@ export const App = () => {
             <Route path="/Inicio" element={<Inicio />} />
             <Route path="/FormNotificacion" element={<FormNotificacion />} />
 
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/gestion-usuarios" element={<GestionUsuarioPage />} />
-            <Route path="/crear-usuario" element={<CrearUsuarioPage />} />
+            <Route path="/login" element={<LoginPage />} />
+
+            <Route
+              path="/dashboard"
+              element={
+                <RutaProtegida>
+                  <DashboardPage />
+                </RutaProtegida>
+              }
+            />
+            <Route
+              path="/gestion-usuarios"
+              element={
+                <RutaProtegida>
+                  <GestionUsuarioPage />
+                </RutaProtegida>
+              }
+            />
+            <Route
+              path="/crear-usuario"
+              element={
+                <RutaProtegida>
+                  <CrearUsuarioPage />
+                </RutaProtegida>
+              }
+            />
           </Routes>
           </ProveedorUsuarios>
         </BrowserRouter>
