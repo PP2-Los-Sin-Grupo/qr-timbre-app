@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Fondo blanco -->
+  <rect width="100" height="100" fill="white"/>
+
+  <!-- Edificio izquierdo (más alto) -->
+  <rect x="5" y="5" width="48" height="85" rx="3" fill="white" stroke="black" stroke-width="4"/>
+
+  <!-- Ventanas izq - fila 1 -->
+  <rect x="13" y="13" width="13" height="13" rx="2" fill="none" stroke="black" stroke-width="3"/>
+  <rect x="32" y="13" width="13" height="13" rx="2" fill="none" stroke="black" stroke-width="3"/>
+
+  <!-- Ventanas izq - fila 2 -->
+  <rect x="13" y="30" width="13" height="13" rx="2" fill="none" stroke="black" stroke-width="3"/>
+  <rect x="32" y="30" width="13" height="13" rx="2" fill="none" stroke="black" stroke-width="3"/>
+
+  <!-- Ventanas izq - fila 3 -->
+  <rect x="13" y="47" width="13" height="13" rx="2" fill="none" stroke="black" stroke-width="3"/>
+  <rect x="32" y="47" width="13" height="13" rx="2" fill="none" stroke="black" stroke-width="3"/>
+
+  <!-- Ventana izq - fila 4 (solo izquierda) -->
+  <rect x="13" y="64" width="13" height="13" rx="2" fill="none" stroke="black" stroke-width="3"/>
+
+  <!-- Puerta con arco (edificio izquierdo) -->
+  <path d="M30 90 L30 78 Q38 70 46 78 L46 90" fill="none" stroke="black" stroke-width="3" stroke-linejoin="round"/>
+
+  <!-- Edificio derecho (más bajo, superpuesto) -->
+  <rect x="43" y="33" width="52" height="57" rx="3" fill="white" stroke="black" stroke-width="4"/>
+
+  <!-- Ventanas der - fila 1 -->
+  <rect x="51" y="41" width="13" height="13" rx="2" fill="none" stroke="black" stroke-width="3"/>
+  <rect x="70" y="41" width="13" height="13" rx="2" fill="none" stroke="black" stroke-width="3"/>
+
+  <!-- Ventanas der - fila 2 -->
+  <rect x="51" y="58" width="13" height="13" rx="2" fill="none" stroke="black" stroke-width="3"/>
+  <rect x="70" y="58" width="13" height="13" rx="2" fill="none" stroke="black" stroke-width="3"/>
+
+  <!-- Ventanas der - fila 3 -->
+  <rect x="51" y="75" width="13" height="13" rx="2" fill="none" stroke="black" stroke-width="3"/>
+  <rect x="70" y="75" width="13" height="13" rx="2" fill="none" stroke="black" stroke-width="3"/>
+
+  <!-- Línea de tierra -->
+  <line x1="2" y1="94" x2="98" y2="94" stroke="black" stroke-width="4" stroke-linecap="round"/>
+</svg>
