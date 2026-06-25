@@ -139,7 +139,7 @@ export const Inicio = () => {
             }
           </Select>
         </FormControl>
-      };
+      }
 
       { errorMsg && <Alert severity="error">{ errorMsg }</Alert> }
 
