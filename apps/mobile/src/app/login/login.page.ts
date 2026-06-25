@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { Firestore, collection, getDocs } from '@angular/fire/firestore';
 import { ThemeService } from '../services/theme.service';
+import { environment } from '../../environments/environment';
 
 interface DeptoOption {
   id: string;
@@ -108,6 +109,13 @@ export class LoginPage implements OnInit {
 
     try {
       await this.authService.login(this.email, this.password);
+      const usuario = this.authService.getCurrentUser();
+      /* Los administradores usan el panel web, no la app móvil de residentes */
+      if (usuario?.rol === 'admin') {
+        this.authService.logout();
+        window.location.href = environment.adminPanelUrl;
+        return;
+      }
       this.router.navigate(['/home']);
     } catch (error: any) {
       this.errorMsg = error?.message === 'invalid-credentials'
