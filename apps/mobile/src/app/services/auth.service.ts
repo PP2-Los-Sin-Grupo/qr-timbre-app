@@ -21,10 +21,23 @@ const SESSION_KEY = 'usuario_session';
 export class AuthService {
   private firestore = inject(Firestore);
 
+  /* Hashea la contraseña con SHA-256 usando el email como salt.
+     Mismo email + misma password → mismo hash siempre.
+     Distinto email → distinto hash aunque la password sea igual. */
+  private async hashPassword(email: string, password: string): Promise<string> {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password + email.toLowerCase());
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hashBuffer))
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
+  }
+
   /* Busca al usuario por email+password y guarda la sesion en localStorage */
   async login(email: string, password: string): Promise<void> {
+    const hashed = await this.hashPassword(email, password);
     const ref = collection(this.firestore, 'usuarios');
-    const q = query(ref, where('email', '==', email), where('password', '==', password));
+    const q = query(ref, where('email', '==', email), where('password', '==', hashed));
     const snapshot = await getDocs(q);
 
     if (snapshot.empty) {
@@ -54,9 +67,10 @@ export class AuthService {
       throw new Error('email-exists');
     }
 
+    const hashed = await this.hashPassword(email, password);
     await addDoc(ref, {
       email,
-      password,
+      password: hashed,
       nombre,
       apellido,
       rol: 'Residente',
@@ -67,17 +81,19 @@ export class AuthService {
 
   /* Cambia la contraseña: verifica credenciales actuales y actualiza el campo */
   async cambiarPassword(email: string, currentPassword: string, newPassword: string): Promise<void> {
+    const hashedCurrent = await this.hashPassword(email, currentPassword);
     const ref = collection(this.firestore, 'usuarios');
-    const q = query(ref, where('email', '==', email), where('password', '==', currentPassword));
+    const q = query(ref, where('email', '==', email), where('password', '==', hashedCurrent));
     const snapshot = await getDocs(q);
 
     if (snapshot.empty) {
       throw new Error('invalid-credentials');
     }
 
+    const hashedNew = await this.hashPassword(email, newPassword);
     const docRef = snapshot.docs[0].ref;
     const { updateDoc } = await import('@angular/fire/firestore');
-    await updateDoc(docRef, { password: newPassword });
+    await updateDoc(docRef, { password: hashedNew });
   }
 
   logout(): void {

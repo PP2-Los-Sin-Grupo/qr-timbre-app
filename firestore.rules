@@ -1,0 +1,48 @@
+rules_version = '2';
+
+/*
+  ATENCIÓN (seguridad):
+  Esta app NO usa Firebase Authentication. El login es casero: los usuarios y sus
+  contraseñas se guardan en la colección "usuarios" y se validan con una consulta.
+  Por eso `request.auth` siempre es null y NO se puede usar como condición.
+
+  Estas reglas habilitan solo las operaciones que la app realmente hace, pero al no
+  haber autenticación cualquiera con la config del proyecto puede leer "usuarios"
+  (incluidas las contraseñas en texto plano). Es aceptable para un proyecto educativo
+  / demo, NO para producción. Para asegurarlo de verdad hay que migrar a Firebase Auth
+  y/o dejar de guardar contraseñas en Firestore.
+*/
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Departamentos: solo lectura (formulario de registro y datos del residente).
+    match /departamentos/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Usuarios: login (read/query), registro (create) y cambio de pass/telegram (update).
+    match /usuarios/{docId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if false;
+    }
+
+    // Notificaciones (timbre): creación desde la web, lectura y cambio de estado en mobile.
+    match /notificaciones/{docId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if false;
+    }
+
+    // Rate limiting anti-abuso: un doc por residente con contador e timestamp de bloqueo.
+    match /ratelimits/{residenteId} {
+      allow read: if true;
+      allow write: if true;
+      allow delete: if false;
+    }
+  }
+}

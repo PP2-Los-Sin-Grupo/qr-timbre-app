@@ -13,6 +13,7 @@ export const Inicio = () => {
   const [ errorMsg, setErrorMsg ] = useState( '' );
   const {
     depto,
+    error: errorDepto,
     piso,
     numerosPiso,
     loading,
@@ -83,6 +84,7 @@ export const Inicio = () => {
           width: '75%'
         } }
       >
+        { errorDepto && <Alert severity="error">{ errorDepto }</Alert> }
         <Button
           variant='contained'
           color='inherit'
@@ -137,7 +139,7 @@ export const Inicio = () => {
             }
           </Select>
         </FormControl>
-      };
+      }
 
       { errorMsg && <Alert severity="error">{ errorMsg }</Alert> }
 
