@@ -1,4 +1,5 @@
 import "./styles.css";
+import "../panel_admin/panel.css";
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -57,30 +58,20 @@ export default function LoginPage() {
           <p className="login-subtitle">Panel de administración</p>
         </div>
 
-        <div className="login-glass">
-          <div className="custom-input">
-            <svg viewBox="0 0 24 24" className="input-icon" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="2" y="4" width="20" height="16" rx="2" />
-              <path d="m22 7-10 5L2 7" />
-            </svg>
-            <input
-              type="email"
-              className="input-field"
-              placeholder="usuario@edificio.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && iniciarSesion()}
-            />
-          </div>
+        <div className="login-card">
+          <input
+            type="email"
+            className="panel-input"
+            placeholder="usuario@edificio.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && iniciarSesion()}
+          />
 
-          <div className="custom-input">
-            <svg viewBox="0 0 24 24" className="input-icon" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2" />
-              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-            </svg>
+          <div className="login-password">
             <input
               type={verPassword ? "text" : "password"}
-              className="input-field"
+              className="panel-input"
               placeholder="Contraseña"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -88,19 +79,19 @@ export default function LoginPage() {
             />
             <button
               type="button"
-              className="toggle-password"
+              className="login-password-toggle"
               onClick={() => setVerPassword((v) => !v)}
               aria-label={verPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
             >
               {verPassword ? (
-                <svg viewBox="0 0 24 24" className="toggle-password-icon" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
                   <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
                   <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" />
                   <line x1="2" y1="2" x2="22" y2="22" />
                 </svg>
               ) : (
-                <svg viewBox="0 0 24 24" className="toggle-password-icon" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
                   <circle cx="12" cy="12" r="3" />
                 </svg>
@@ -108,7 +99,7 @@ export default function LoginPage() {
             </button>
           </div>
 
-          <button className="login-button" onClick={iniciarSesion} disabled={cargando}>
+          <button className="panel-btn panel-btn-primario panel-btn-bloque" onClick={iniciarSesion} disabled={cargando}>
             {cargando ? "Ingresando..." : "Ingresar"}
           </button>
 

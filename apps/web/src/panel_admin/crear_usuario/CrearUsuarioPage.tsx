@@ -1,9 +1,11 @@
 import "./styles.css";
+import "../panel.css";
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { collection, getDocs } from "firebase/firestore";
 import { useUsuarios } from "../contexto/UsuariosContexto";
-import { Button } from "@mui/material";
+import { db } from "../../firebase/config";
 
 interface DeptoStorage {
   id: string;
@@ -39,16 +41,26 @@ export default function CrearUsuarioPage() {
   const [ deptosDisponibles, setDeptosDisponibles ] = useState<string[]>( [] );
   const [ todosDeptos, setTodosDeptos ] = useState<DeptoStorage[]>( [] );
 
-  /* Cargar departamentos desde localStorage al montar */
+  /* Cargar los departamentos disponibles desde Firestore al montar */
   useEffect( () => {
-    const guardados = localStorage.getItem( 'departamentos' );
-    if ( guardados ) {
-      const deptos: DeptoStorage[] = JSON.parse( guardados );
+    let activo = true;
+    ( async () => {
+      const snap = await getDocs( collection( db, 'departamentos' ) );
+      if ( !activo ) return;
+      const deptos: DeptoStorage[] = snap.docs
+        .filter( d => d.data()[ 'activo' ] !== false )
+        .map( d => ( {
+          id: d.id,
+          piso: d.data()[ 'piso' ] ?? '',
+          numero: d.data()[ 'numero' ] ?? '',
+        } ) )
+        .filter( d => d.piso && d.numero );
       setTodosDeptos( deptos );
       const pisos = [ ...new Set( deptos.map( d => d.piso ) ) ]
         .sort( ( a, b ) => Number( a ) - Number( b ) );
       setPisosDisponibles( pisos );
-    }
+    } )();
+    return () => { activo = false; };
   }, [] );
 
   /* Cuando cambia el piso, actualizar las letras disponibles */
@@ -62,12 +74,12 @@ export default function CrearUsuarioPage() {
     setDeptoSeleccionado( "" );
   }, [ pisoSeleccionado, todosDeptos ] );
 
-  const crearUsuario = () => {
+  const crearUsuario = async () => {
     if ( !nombreCompleto || !email || !pisoSeleccionado || !deptoSeleccionado ) {
       setErrorMsg( "Completá todos los campos" );
       return;
     }
-    const ok = agregarUsuario({
+    const ok = await agregarUsuario({
       nombreCompleto,
       email,
       piso: pisoSeleccionado,
@@ -85,13 +97,13 @@ export default function CrearUsuarioPage() {
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
         <h1 style={{ margin: 0 }}>Nuevo Usuario</h1>
-        <button className="boton-volver" onClick={ () => navigate( "/gestion-usuarios" ) }>← Volver</button>
+        <button className="panel-btn panel-btn-secundario" onClick={ () => navigate( "/gestion-usuarios" ) }>← Volver</button>
       </div>
 
-      <input placeholder="Nombre completo" value={nombreCompleto}
+      <input className="panel-input" placeholder="Nombre completo" value={nombreCompleto}
         onChange={ e => setNombreCompleto( capitalizarNombre( e.target.value ) ) } />
 
-      <input placeholder="Email" value={email}
+      <input className="panel-input" placeholder="Email" value={email}
         onChange={ e => setEmail( e.target.value ) } />
 
       { pisosDisponibles.length === 0 ? (
@@ -100,7 +112,7 @@ export default function CrearUsuarioPage() {
         </p>
       ) : (
         <>
-          <select value={pisoSeleccionado} onChange={ e => setPisoSeleccionado( e.target.value ) } className="select-campo">
+          <select value={pisoSeleccionado} onChange={ e => setPisoSeleccionado( e.target.value ) } className="panel-input">
             <option value="">— Seleccioná un piso —</option>
             { pisosDisponibles.map( piso => (
               <option key={piso} value={piso}>
@@ -113,7 +125,7 @@ export default function CrearUsuarioPage() {
             value={deptoSeleccionado}
             onChange={ e => setDeptoSeleccionado( e.target.value ) }
             disabled={ !pisoSeleccionado }
-            className="select-campo"
+            className="panel-input"
           >
             <option value="">— Seleccioná un departamento —</option>
             { deptosDisponibles.map( letra => (
@@ -125,9 +137,9 @@ export default function CrearUsuarioPage() {
 
       { errorMsg && <p style={{ color: '#f87171', fontSize: '14px' }}>{errorMsg}</p> }
 
-      <Button variant="contained" color="primary" onClick={crearUsuario}>
+      <button className="panel-btn panel-btn-primario panel-btn-bloque" onClick={crearUsuario}>
         Crear y enviar credenciales
-      </Button>
+      </button>
 
     </div>
   );

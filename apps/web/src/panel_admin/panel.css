@@ -1,0 +1,72 @@
+/* Estilos comunes del panel de administracion.
+   Unifica colores y formato de inputs y botones en gestion y crear usuarios. */
+
+/* ── Inputs y selects ── */
+.panel-input {
+  width: 100%;
+  display: block;
+  margin-bottom: 16px;
+  padding: 14px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  color: white;
+  font-size: 15px;
+  box-sizing: border-box;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.panel-input::placeholder {
+  color: #94a3b8;
+}
+
+.panel-input:focus {
+  border-color: #3b82f6;
+}
+
+.panel-input:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.panel-input option {
+  background: #1e293b;
+  color: white;
+}
+
+/* ── Botones ── */
+.panel-btn {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  color: white;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.panel-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.panel-btn-primario { background: #3b82f6; }
+.panel-btn-primario:hover { background: #2563eb; }
+
+.panel-btn-secundario { background: #1e293b; }
+.panel-btn-secundario:hover { background: #334155; }
+
+.panel-btn-peligro { background: #7f1d1d; }
+.panel-btn-peligro:hover { background: #991b1b; }
+
+/* Boton de accion principal a lo ancho (ej: crear usuario) */
+.panel-btn-bloque {
+  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 16px;
+  margin-top: 8px;
+}

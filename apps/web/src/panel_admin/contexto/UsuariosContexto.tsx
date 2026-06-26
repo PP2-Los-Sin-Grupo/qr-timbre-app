@@ -7,23 +7,30 @@ export type { Usuario };
 
 interface ContextoUsuariosType {
   usuarios: Usuario[];
-  agregarUsuario: ( datos: Omit<Usuario, 'id'> ) => boolean;
-  eliminarUsuario: ( id: string ) => void;
-  editarUsuario: ( id: string, datos: Omit<Usuario, 'id'> ) => void;
+  cargando: boolean;
+  agregarUsuario: ( datos: Omit<Usuario, 'id'> ) => Promise<boolean>;
+  eliminarUsuario: ( id: string ) => Promise<void>;
+  editarUsuario: ( id: string, datos: Omit<Usuario, 'id'> ) => Promise<void>;
 }
 
 const ContextoUsuarios = createContext<ContextoUsuariosType | null>( null );
 
 export const ProveedorUsuarios = ({ children }: { children: ReactNode }) => {
   const [ usuarios, setUsuarios ] = useState<Usuario[]>( [] );
+  const [ cargando, setCargando ] = useState( true );
 
   useEffect( () => {
-    const res = UsuariosApi.obtenerUsuarios();
-    if ( res.estado === 'success' ) setUsuarios( res.data );
+    let activo = true;
+    UsuariosApi.obtenerUsuarios().then( res => {
+      if ( !activo ) return;
+      if ( res.estado === 'success' ) setUsuarios( res.data );
+      setCargando( false );
+    } );
+    return () => { activo = false; };
   }, [] );
 
-  const agregarUsuario = ( datos: Omit<Usuario, 'id'> ): boolean => {
-    const res = UsuariosApi.crearUsuario( datos );
+  const agregarUsuario = async ( datos: Omit<Usuario, 'id'> ): Promise<boolean> => {
+    const res = await UsuariosApi.crearUsuario( datos );
     if ( res.estado === 'success' && res.data ) {
       setUsuarios( prev => [ ...prev, res.data as Usuario ] );
       return true;
@@ -31,18 +38,22 @@ export const ProveedorUsuarios = ({ children }: { children: ReactNode }) => {
     return false;
   };
 
-  const eliminarUsuario = ( id: string ) => {
-    UsuariosApi.eliminarUsuario( id );
-    setUsuarios( prev => prev.filter( u => u.id !== id ) );
+  const eliminarUsuario = async ( id: string ) => {
+    const res = await UsuariosApi.eliminarUsuario( id );
+    if ( res.estado === 'success' ) {
+      setUsuarios( prev => prev.filter( u => u.id !== id ) );
+    }
   };
 
-  const editarUsuario = ( id: string, datos: Omit<Usuario, 'id'> ) => {
-    UsuariosApi.editarUsuario( id, datos );
-    setUsuarios( prev => prev.map( u => u.id === id ? { id, ...datos } : u ) );
+  const editarUsuario = async ( id: string, datos: Omit<Usuario, 'id'> ) => {
+    const res = await UsuariosApi.editarUsuario( id, datos );
+    if ( res.estado === 'success' ) {
+      setUsuarios( prev => prev.map( u => u.id === id ? { id, ...datos } : u ) );
+    }
   };
 
   return (
-    <ContextoUsuarios.Provider value={{ usuarios, agregarUsuario, eliminarUsuario, editarUsuario }}>
+    <ContextoUsuarios.Provider value={{ usuarios, cargando, agregarUsuario, eliminarUsuario, editarUsuario }}>
       {children}
     </ContextoUsuarios.Provider>
   );
