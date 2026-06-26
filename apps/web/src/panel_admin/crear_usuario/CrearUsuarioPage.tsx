@@ -41,14 +41,26 @@ export default function CrearUsuarioPage() {
   const [ deptosDisponibles, setDeptosDisponibles ] = useState<string[]>( [] );
   const [ todosDeptos, setTodosDeptos ] = useState<DeptoStorage[]>( [] );
 
-  /* Cargar los departamentos disponibles desde Firestore al montar */
+  /* Cargar los departamentos LIBRES desde Firestore al montar.
+     Un departamento esta libre si ningun usuario lo tiene asignado (departamentoId). */
   useEffect( () => {
     let activo = true;
     ( async () => {
-      const snap = await getDocs( collection( db, 'departamentos' ) );
+      const [ deptosSnap, usuariosSnap ] = await Promise.all( [
+        getDocs( collection( db, 'departamentos' ) ),
+        getDocs( collection( db, 'usuarios' ) ),
+      ] );
       if ( !activo ) return;
-      const deptos: DeptoStorage[] = snap.docs
+
+      const ocupados = new Set(
+        usuariosSnap.docs
+          .map( d => d.data()[ 'departamentoId' ] )
+          .filter( ( id ): id is string => !!id ),
+      );
+
+      const deptos: DeptoStorage[] = deptosSnap.docs
         .filter( d => d.data()[ 'activo' ] !== false )
+        .filter( d => !ocupados.has( d.id ) )
         .map( d => ( {
           id: d.id,
           piso: d.data()[ 'piso' ] ?? '',

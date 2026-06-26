@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { collection, getDocs, addDoc } from 'firebase/firestore';
+import { db } from '../../firebase/config';
 
 type Estado = 'idle' | 'generando' | 'exito' | 'error';
 
@@ -9,8 +11,6 @@ interface Departamento {
   numero: string;
   activo: boolean;
 }
-
-const STORAGE_KEY = 'departamentos';
 
 const NOMBRES_PISO: Record<number, string> = {
   1: 'PB',
@@ -38,45 +38,66 @@ const NOMBRES_PISO: Record<number, string> = {
 export default function DepartamentosPage() {
   const navigate = useNavigate();
 
-  const [ pisos, setPisos ] = useState<number | ''>( '' );
-  const [ deptosPorPiso, setDeptosPorPiso ] = useState<number | ''>( '' );
   const [ estado, setEstado ] = useState<Estado>( 'idle' );
   const [ mensaje, setMensaje ] = useState( '' );
   const [ departamentosGuardados, setDepartamentosGuardados ] = useState<Departamento[]>( [] );
 
+  const [ nuevoPiso, setNuevoPiso ] = useState( '' );
+  const [ nuevoNumero, setNuevoNumero ] = useState( '' );
+
   useEffect( () => {
-    const guardados = localStorage.getItem( STORAGE_KEY );
-    if ( guardados ) setDepartamentosGuardados( JSON.parse( guardados ) );
+    let activo = true;
+    ( async () => {
+      const snap = await getDocs( collection( db, 'departamentos' ) );
+      if ( !activo ) return;
+      const lista: Departamento[] = snap.docs.map( d => ( {
+        id: d.id,
+        piso: d.data()[ 'piso' ] ?? '',
+        numero: d.data()[ 'numero' ] ?? '',
+        activo: d.data()[ 'activo' ] !== false,
+      } ) );
+      setDepartamentosGuardados( lista );
+    } )();
+    return () => { activo = false; };
   }, [] );
 
-  const handlePisos = ( v: string ) => {
-    const n = v === '' ? '' : Math.min( 20, Math.max( 1, Number( v ) ) );
-    setPisos( n );
-  };
-
-  const handleDeptos = ( v: string ) => {
-    const n = v === '' ? '' : Math.min( 10, Math.max( 1, Number( v ) ) );
-    setDeptosPorPiso( n );
-  };
-
-  const generarDepartamentos = () => {
-    if ( !pisos || !deptosPorPiso ) return;
+  const agregarUno = async () => {
+    const piso = nuevoPiso.trim();
+    const numero = nuevoNumero.trim().toUpperCase();
+    if ( !piso || !numero ) return;
     setEstado( 'generando' );
+    setMensaje( '' );
     try {
-      const letras = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.slice( 0, Number( deptosPorPiso ) );
-      const departamentos: Departamento[] = [];
-      for ( let piso = 1; piso <= Number( pisos ); piso++ ) {
-        for ( const letra of letras ) {
-          departamentos.push({ id: `${piso}${letra}`, piso: String( piso ), numero: letra, activo: true });
-        }
+      const snap = await getDocs( collection( db, 'departamentos' ) );
+      const existe = snap.docs.some(
+        d => String( d.data()[ 'piso' ] ) === piso
+          && String( d.data()[ 'numero' ] ).toUpperCase() === numero,
+      );
+      if ( existe ) {
+        setEstado( 'error' );
+        setMensaje( `Ya existe ${ NOMBRES_PISO[ Number( piso ) ] ?? `piso ${piso}` } - Depto ${numero}` );
+        return;
       }
-      localStorage.setItem( STORAGE_KEY, JSON.stringify( departamentos ) );
-      setDepartamentosGuardados( departamentos );
+      await addDoc( collection( db, 'departamentos' ), {
+        piso,
+        numero,
+        activo: true,
+      } );
+      const final = await getDocs( collection( db, 'departamentos' ) );
+      const lista: Departamento[] = final.docs.map( d => ( {
+        id: d.id,
+        piso: d.data()[ 'piso' ] ?? '',
+        numero: d.data()[ 'numero' ] ?? '',
+        activo: d.data()[ 'activo' ] !== false,
+      } ) );
+      setDepartamentosGuardados( lista );
+      setNuevoPiso( '' );
+      setNuevoNumero( '' );
       setEstado( 'exito' );
-      setMensaje( `✓ Se generaron ${departamentos.length} departamentos` );
+      setMensaje( `✓ Agregado ${ NOMBRES_PISO[ Number( piso ) ] ?? `piso ${piso}` } - Depto ${numero}` );
     } catch {
       setEstado( 'error' );
-      setMensaje( 'Ocurrió un error al guardar los departamentos' );
+      setMensaje( 'Ocurrió un error al guardar el departamento' );
     }
   };
 
@@ -84,8 +105,6 @@ export default function DepartamentosPage() {
     .sort( ( a, b ) => Number( b ) - Number( a ) );
   const letrasUnicas = [ ...new Set( departamentosGuardados.map( d => d.numero ) ) ]
     .sort();
-
-  const total = pisos && deptosPorPiso ? Number( pisos ) * Number( deptosPorPiso ) : 0;
 
   return (
     <div style={ { width: '100%', minHeight: '100vh', background: '#0f172a', color: 'white', padding: '40px', boxSizing: 'border-box' } }>
@@ -103,25 +122,28 @@ export default function DepartamentosPage() {
 
       <div style={ { display: 'flex', gap: '32px', alignItems: 'flex-start', flexWrap: 'wrap' } }>
 
-        {/* Formulario */}
+        {/* Agregar un departamento */}
         <div style={ { background: '#1e293b', borderRadius: '16px', padding: '30px', width: '300px', flexShrink: 0 } }>
-          <h2 style={ { marginTop: 0, marginBottom: '20px', fontSize: '18px' } }>Generar departamentos</h2>
+          <h2 style={ { marginTop: 0, marginBottom: '20px', fontSize: '18px' } }>Agregar un departamento</h2>
 
-          <label style={ labelStyle }>Cantidad de pisos (1–20)</label>
-          <input type="number" min={1} max={20} value={pisos}
-            onChange={ e => handlePisos( e.target.value ) }
-            placeholder="Ej: 5" style={ inputStyle } />
+          <label style={ labelStyle }>Piso</label>
+          <select value={nuevoPiso}
+            onChange={ e => setNuevoPiso( e.target.value ) }
+            style={ inputStyle }>
+            <option value="">— Seleccioná un piso —</option>
+            { Array.from( { length: 20 }, ( _, i ) => i + 1 ).map( n => (
+              <option key={n} value={String( n )}>{ NOMBRES_PISO[ n ] ?? `Piso ${n}` }</option>
+            ) ) }
+          </select>
 
-          <label style={ { ...labelStyle, marginTop: '16px' } }>Departamentos por piso (1–10)</label>
-          <input type="number" min={1} max={10} value={deptosPorPiso}
-            onChange={ e => handleDeptos( e.target.value ) }
-            placeholder="Ej: 4" style={ inputStyle } />
+          <label style={ { ...labelStyle, marginTop: '16px' } }>Departamento (letra)</label>
+          <input type="text" value={nuevoNumero}
+            onChange={ e => setNuevoNumero( e.target.value ) }
+            placeholder="Ej: A" style={ inputStyle } />
 
-          { total > 0 && (
-            <p style={ { color: '#38bdf8', fontSize: '14px', margin: '16px 0 0' } }>
-              Se van a crear <strong>{total}</strong> departamentos ({pisos} × {deptosPorPiso})
-            </p>
-          ) }
+          <p style={ { color: '#64748b', fontSize: '13px', margin: '14px 0 0' } }>
+            Se guarda con <strong>activo: true</strong> por defecto.
+          </p>
 
           { mensaje && (
             <p style={ { color: estado === 'exito' ? '#4ade80' : '#f87171', fontSize: '14px', margin: '12px 0 0' } }>
@@ -130,16 +152,16 @@ export default function DepartamentosPage() {
           ) }
 
           <button
-            onClick={ generarDepartamentos }
-            disabled={ !pisos || !deptosPorPiso }
+            onClick={ agregarUno }
+            disabled={ !nuevoPiso || !nuevoNumero }
             style={ {
-              marginTop: '24px', width: '100%', padding: '12px',
-              background: ( !pisos || !deptosPorPiso ) ? '#334155' : '#3b82f6',
+              marginTop: '20px', width: '100%', padding: '12px',
+              background: ( !nuevoPiso || !nuevoNumero ) ? '#334155' : '#3b82f6',
               color: 'white', border: 'none', borderRadius: '10px', fontSize: '15px',
-              cursor: ( !pisos || !deptosPorPiso ) ? 'not-allowed' : 'pointer',
+              cursor: ( !nuevoPiso || !nuevoNumero ) ? 'not-allowed' : 'pointer',
             } }
           >
-            Generar departamentos
+            Agregar departamento
           </button>
         </div>
 
