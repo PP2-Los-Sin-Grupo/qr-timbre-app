@@ -1,13 +1,14 @@
-body {
-  margin: 0;
-  padding: 0;
+.css-3ykkg7-MuiStack-root {
+  margin: 0px;
+  width: 100% !important;
+  min-height: 100vh;
+  height: auto;
 }
 
 .contenedor-usuarios {
-  width: 100vw;
+  width: 80%;
+  height:100vh;
   min-height: 100vh;
-  background: #0f172a;
-  color: white;
   padding: 40px;
   box-sizing: border-box;
 }
@@ -44,22 +45,15 @@ body {
 input {
   width: 100%;
   margin-top: 20px;
-  padding: 14px;
-  box-sizing: border-box;
-  background: #1e293b;
-  border: 1px solid #334155;
+  padding: 14px 0;
   border-radius: 8px;
-  color: white;
-  font-size: 15px;
 }
 
 .lista-usuarios {
   margin-top: 30px;
+  padding: 10px 20px;
 }
 
 .usuario {
-  background: #1e293b;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 15px;
+  padding: 0px 0px 20px;
 }

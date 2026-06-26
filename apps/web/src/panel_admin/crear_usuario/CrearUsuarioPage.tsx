@@ -3,6 +3,7 @@ import "./styles.css";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUsuarios } from "../contexto/UsuariosContexto";
+import { Button } from "@mui/material";
 
 interface DeptoStorage {
   id: string;
@@ -124,7 +125,9 @@ export default function CrearUsuarioPage() {
 
       { errorMsg && <p style={{ color: '#f87171', fontSize: '14px' }}>{errorMsg}</p> }
 
-      <button className="boton-crear" onClick={crearUsuario}>Crear y enviar credenciales</button>
+      <Button variant="contained" color="primary" onClick={crearUsuario}>
+        Crear y enviar credenciales
+      </Button>
 
     </div>
   );

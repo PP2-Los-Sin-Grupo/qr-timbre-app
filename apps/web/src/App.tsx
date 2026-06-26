@@ -40,6 +40,7 @@ export const App = () => {
           justifyContent: "flex-start",
           alignItems: "center",
           bgcolor: "background.default",
+          cardColor: "background.paper",
           color: "text.primary",
           width: "100vw",
           height: "100vh",
