@@ -11,6 +11,9 @@ import { createAppTheme } from './theme/appTheme';
 import DashboardPage from './panel_admin/dashboard/DashboardPage';
 import GestionUsuarioPage from './panel_admin/gestion_usuario/GestionUsuarioPage';
 import CrearUsuarioPage from './panel_admin/crear_usuario/CrearUsuarioPage';
+import DepartamentosPage from './panel_admin/dashboard/DepartamentosPage';
+import AsignacionesPage from './panel_admin/dashboard/AsignacionesPage';
+import RegistrosPage from './panel_admin/dashboard/RegistrosPage';
 import { ProveedorUsuarios } from './panel_admin/contexto/UsuariosContexto';
 import LoginPage from './auth/LoginPage';
 import RutaProtegida from './auth/RutaProtegida';
@@ -87,6 +90,30 @@ export const App = () => {
               element={
                 <RutaProtegida>
                   <CrearUsuarioPage />
+                </RutaProtegida>
+              }
+            />
+            <Route
+              path="/departamentos"
+              element={
+                <RutaProtegida>
+                  <DepartamentosPage />
+                </RutaProtegida>
+              }
+            />
+            <Route
+              path="/asignaciones"
+              element={
+                <RutaProtegida>
+                  <AsignacionesPage />
+                </RutaProtegida>
+              }
+            />
+            <Route
+              path="/registros"
+              element={
+                <RutaProtegida>
+                  <RegistrosPage />
                 </RutaProtegida>
               }
             />
