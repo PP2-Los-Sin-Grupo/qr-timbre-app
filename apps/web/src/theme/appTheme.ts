@@ -4,6 +4,30 @@ export const createAppTheme = (darkMode: boolean) =>
   createTheme({
     palette: {
       mode: darkMode ? 'dark' : 'light',
+      
+      primary: {
+        // main: darkMode ? "#3b82f6" : "#0a1335",
+        main: darkMode ? "#666666" : "#5882c6",
+      },
+
+      secondary: {
+        main: darkMode ? "#a855f7" : "#6b21a8",
+      },
+
+      success: {
+        main: darkMode ? "#22c55e" : "#2e7d32",
+      },
+
+      background: {
+        default: darkMode ? "#0f172a" : "#f2f4f8",
+        // default: darkMode ? "#121212" : "#f2f4f8",
+        paper: darkMode ? "#1e1e1e" : "#ffffff",
+      },
+
+      text: {
+        primary: darkMode ? "#f5f5f5" : "#222222",
+        secondary: darkMode ? "#c7c7c7" : "#666666",
+      },
     },
     components: {
       MuiButton: {

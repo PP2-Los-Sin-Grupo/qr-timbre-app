@@ -1,8 +1,13 @@
-.contenedor-crear {
-  width: 100vw;
+.css-3ykkg7-MuiStack-root {
+  margin: 0px;
+  width: 100% !important;
   min-height: 100vh;
-  background: #0f172a;
-  color: white;
+  height: auto;
+}
+
+.contenedor-crear {
+  width: 80%;
+  min-height: 100vh;
   padding: 40px;
   box-sizing: border-box;
 }

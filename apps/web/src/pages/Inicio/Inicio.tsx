@@ -143,18 +143,6 @@ export const Inicio = () => {
 
       { errorMsg && <Alert severity="error">{ errorMsg }</Alert> }
 
-      {/*
-      { pisoNroSeleccionado && pisoNroSeleccionado.piso && pisoNroSeleccionado.numero &&
-        <>
-          <FormGroup>
-            <FormControlLabel control={ <Switch defaultChecked /> } label="Telegram" />
-            <FormControlLabel control={ <Switch /> } label="Mail" />
-          </FormGroup>
-          <Button variant="contained" color="success"> Enviar Notificacion</Button>
-        </>
-      } */}
-
-
       <Button
         variant="contained"
         color="success"

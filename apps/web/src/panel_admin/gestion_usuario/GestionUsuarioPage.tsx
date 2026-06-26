@@ -3,29 +3,7 @@ import "./styles.css";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUsuarios } from "../contexto/UsuariosContexto";
-import type { Usuario } from "../contexto/UsuariosContexto";
-
-const botonVolver: React.CSSProperties = {
-  background: '#1e293b',
-  color: 'white',
-  border: 'none',
-  borderRadius: '10px',
-  padding: '10px 20px',
-  cursor: 'pointer',
-  fontSize: '14px',
-};
-
-const inputEditar: React.CSSProperties = {
-  background: '#0f172a',
-  border: '1px solid #334155',
-  borderRadius: '8px',
-  color: 'white',
-  padding: '6px 10px',
-  fontSize: '13px',
-  width: '100%',
-  marginBottom: '6px',
-  boxSizing: 'border-box',
-};
+import { Box } from "@mui/material";
 
 export default function GestionUsuarioPage() {
   const navigate = useNavigate();
@@ -72,8 +50,13 @@ export default function GestionUsuarioPage() {
         onChange={ e => setTextoBusqueda( e.target.value ) }
       />
 
-      <div className="lista-usuarios">
-        { usuariosFiltrados.length === 0 ? (
+      <Box className="lista-usuarios"
+        sx={{
+          bgcolor: "primary.main",
+          color: "primary.contrastText",
+          borderRadius: "12px",
+        }}>
+        {usuariosFiltrados.length === 0 ? (
           <p>No hay usuarios registrados</p>
         ) : (
           usuariosFiltrados.map( usuario => (
@@ -125,9 +108,8 @@ export default function GestionUsuarioPage() {
 
             </div>
           ))
-        ) }
-      </div>
-
+        )}
+      </Box>
     </div>
   );
 }
