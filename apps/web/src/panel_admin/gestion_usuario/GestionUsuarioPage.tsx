@@ -1,13 +1,15 @@
 import "./styles.css";
+import "../panel.css";
 
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUsuarios } from "../contexto/UsuariosContexto";
-import { Box } from "@mui/material";
+import type { Usuario } from "../contexto/UsuariosContexto";
+import { Box, CircularProgress } from "@mui/material";
 
 export default function GestionUsuarioPage() {
   const navigate = useNavigate();
-  const { usuarios, eliminarUsuario, editarUsuario } = useUsuarios();
+  const { usuarios, cargando, eliminarUsuario, editarUsuario } = useUsuarios();
 
   const [ textoBusqueda, setTextoBusqueda ] = useState( "" );
   const [ editandoId, setEditandoId ] = useState<string | null>( null );
@@ -39,11 +41,12 @@ export default function GestionUsuarioPage() {
         <h1>Usuarios</h1>
         <div style={{ display: "flex", gap: "24px", alignItems: "center" }}>
           <button className="boton-agregar" onClick={ () => navigate( "/crear-usuario" ) }>+</button>
-          <button style={ botonVolver } onClick={ () => navigate( "/dashboard" ) }>← Volver</button>
+          <button className="panel-btn panel-btn-secundario" onClick={ () => navigate( "/dashboard" ) }>← Volver</button>
         </div>
       </div>
 
       <input
+        className="panel-input"
         type="text"
         placeholder="Buscar usuario..."
         value={textoBusqueda}
@@ -56,7 +59,11 @@ export default function GestionUsuarioPage() {
           color: "primary.contrastText",
           borderRadius: "12px",
         }}>
-        {usuariosFiltrados.length === 0 ? (
+        {cargando ? (
+          <Box sx={{ display: "flex", justifyContent: "center", padding: "24px" }}>
+            <CircularProgress color="inherit" />
+          </Box>
+        ) : usuariosFiltrados.length === 0 ? (
           <p>No hay usuarios registrados</p>
         ) : (
           usuariosFiltrados.map( usuario => (
@@ -65,21 +72,19 @@ export default function GestionUsuarioPage() {
               { editandoId === usuario.id ? (
                 /* ── Modo edición ── */
                 <div>
-                  <input style={inputEditar} placeholder="Nombre completo" value={formEditar.nombreCompleto}
+                  <input className="panel-input" placeholder="Nombre completo" value={formEditar.nombreCompleto}
                     onChange={ e => setFormEditar( p => ({ ...p, nombreCompleto: e.target.value }) ) } />
-                  <input style={inputEditar} placeholder="Email" value={formEditar.email}
+                  <input className="panel-input" placeholder="Email" value={formEditar.email}
                     onChange={ e => setFormEditar( p => ({ ...p, email: e.target.value }) ) } />
-                  <input style={inputEditar} placeholder="Piso" value={formEditar.piso}
+                  <input className="panel-input" placeholder="Piso" value={formEditar.piso}
                     onChange={ e => setFormEditar( p => ({ ...p, piso: e.target.value }) ) } />
-                  <input style={inputEditar} placeholder="Departamento" value={formEditar.departamento}
+                  <input className="panel-input" placeholder="Departamento" value={formEditar.departamento}
                     onChange={ e => setFormEditar( p => ({ ...p, departamento: e.target.value }) ) } />
                   <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
-                    <button onClick={guardarEdicion}
-                      style={{ background: '#3b82f6', color: 'white', border: 'none', borderRadius: '8px', padding: '6px 14px', cursor: 'pointer' }}>
+                    <button onClick={guardarEdicion} className="panel-btn panel-btn-primario">
                       Guardar
                     </button>
-                    <button onClick={ () => setEditandoId( null ) }
-                      style={{ background: '#334155', color: 'white', border: 'none', borderRadius: '8px', padding: '6px 14px', cursor: 'pointer' }}>
+                    <button onClick={ () => setEditandoId( null ) } className="panel-btn panel-btn-secundario">
                       Cancelar
                     </button>
                   </div>
@@ -94,12 +99,10 @@ export default function GestionUsuarioPage() {
                     </span>
                   </div>
                   <div style={{ display: 'flex', gap: '8px' }}>
-                    <button onClick={ () => iniciarEdicion( usuario ) }
-                      style={{ background: '#1d4ed8', color: 'white', border: 'none', borderRadius: '8px', padding: '6px 14px', cursor: 'pointer', fontSize: '13px' }}>
+                    <button onClick={ () => iniciarEdicion( usuario ) } className="panel-btn panel-btn-primario">
                       Editar
                     </button>
-                    <button onClick={ () => eliminarUsuario( usuario.id ) }
-                      style={{ background: '#7f1d1d', color: 'white', border: 'none', borderRadius: '8px', padding: '6px 14px', cursor: 'pointer', fontSize: '13px' }}>
+                    <button onClick={ () => eliminarUsuario( usuario.id ) } className="panel-btn panel-btn-peligro">
                       Eliminar
                     </button>
                   </div>

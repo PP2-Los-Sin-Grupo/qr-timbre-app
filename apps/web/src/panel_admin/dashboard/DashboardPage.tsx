@@ -44,6 +44,7 @@ export default function DashboardPage() {
             bgcolor: "primary.main",
             color: "primary.contrastText",
           }}
+          onClick={() => navigate("/gestion-usuarios")}
         >
           <h2>{stats?.totalUsuarios ?? 0}</h2>
           <span>Usuarios</span>
@@ -51,7 +52,12 @@ export default function DashboardPage() {
       </div>
 
       <div className="menu">
-        <Button variant="contained" color="primary" className="tarjeta-menu">
+        <Button
+          variant="contained"
+          color="primary"
+          className="tarjeta-menu"
+          onClick={() => navigate("/departamentos")}
+        >
           Departamentos
         </Button>
 

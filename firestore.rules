@@ -16,18 +16,21 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Departamentos: solo lectura (formulario de registro y datos del residente).
+    // Departamentos: lectura (formulario de registro) y alta/edicion desde el panel.
     match /departamentos/{docId} {
       allow read: if true;
-      allow write: if false;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if true;
     }
 
-    // Usuarios: login (read/query), registro (create) y cambio de pass/telegram (update).
+    // Usuarios: login (read/query), registro (create), cambio de pass/telegram (update)
+    // y eliminacion desde el panel de administracion (delete).
     match /usuarios/{docId} {
       allow read: if true;
       allow create: if true;
       allow update: if true;
-      allow delete: if false;
+      allow delete: if true;
     }
 
     // Notificaciones (timbre): creación desde la web, lectura y cambio de estado en mobile.

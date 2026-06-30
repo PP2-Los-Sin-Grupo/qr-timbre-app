@@ -43,11 +43,11 @@
   height: 88px;
   margin: 0 auto 20px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.45);
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.45);
 }
 
 .login-icon {
@@ -71,98 +71,47 @@
   margin: 0;
 }
 
-.login-glass {
+/* Tarjeta plana (mismo lenguaje visual que el panel) */
+.login-card {
   width: 100%;
   max-width: 400px;
-  background: rgba(26, 26, 46, 0.65);
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 18px;
   padding: 28px;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 16px;
   box-sizing: border-box;
 }
 
-/* Inputs */
-.custom-input {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 14px;
-  background: rgba(255, 255, 255, 0.04);
-  border-radius: 12px;
-  margin-bottom: 14px;
-  transition: background 0.15s ease, box-shadow 0.15s ease;
+/* Campo de contraseña con botón de mostrar/ocultar */
+.login-password {
+  position: relative;
+  margin-bottom: 16px;
 }
 
-.custom-input:focus-within {
-  background: rgba(255, 255, 255, 0.07);
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.35);
+.login-password .panel-input {
+  margin-bottom: 0;
+  padding-right: 48px;
 }
 
-.input-icon {
-  display: block;
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  color: #64748b;
-}
-
-.input-field {
-  flex: 1;
-  width: 100%;
-  border: none;
-  outline: none;
-  background: transparent;
-  color: #f8fafc;
-  font-size: 15px;
-  padding: 1px 0px 18px 0px;
-}
-
-.input-field::placeholder {
-  color: #64748b;
-}
-
-.toggle-password {
+.login-password-toggle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
   border: none;
   background: transparent;
+  color: #94a3b8;
   cursor: pointer;
-  padding: 4px;
-  margin: 0;
+  padding: 0;
 }
 
-.toggle-password-icon {
+.login-password-toggle svg {
   display: block;
   width: 20px;
   height: 20px;
-  color: #64748b;
-}
-
-/* Botón */
-.login-button {
-  width: 100%;
-  margin-top: 10px;
-  height: 50px;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
-  transition: opacity 0.15s ease;
-}
-
-.login-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
 /* Error */
