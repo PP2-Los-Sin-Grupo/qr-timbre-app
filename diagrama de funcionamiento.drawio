@@ -29,7 +29,7 @@
           <mxGeometry x="480" y="100" width="150" height="46" as="geometry" />
         </mxCell>
         <!-- Paso 4 -->
-        <mxCell id="step4" value="4. Vincula Telegram&#xa;Bot API sendMessage" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="step4" value="4. Vincula Telegram (opcional)&#xa;Bot API sendMessage" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;dashed=1;" vertex="1" parent="1">
           <mxGeometry x="690" y="100" width="150" height="46" as="geometry" />
         </mxCell>
         <!-- Paso 5 -->
@@ -122,7 +122,7 @@
           <mxGeometry x="860" y="380" width="140" height="46" as="geometry" />
         </mxCell>
         <!-- Paso 11 -->
-        <mxCell id="step11" value="11. Telegram Bot&#xa;sendMessage()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="step11" value="11. Telegram Bot&#xa;sendMessage() (opcional)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;dashed=1;" vertex="1" parent="1">
           <mxGeometry x="860" y="450" width="140" height="46" as="geometry" />
         </mxCell>
         <!-- Paso 12 -->
@@ -172,6 +172,9 @@
         </mxCell>
         <mxCell id="leg-7" value="Estados de notificacion: nueva → vista / ignorada" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontFamily=Consolas;fontColor=#999999;" vertex="1" parent="1">
           <mxGeometry x="400" y="547" width="380" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="leg-8" value="Borde punteado = paso opcional (Telegram: solo para avisar con la app cerrada; el aviso in-app funciona sin vincular)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontColor=#999999;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="400" y="569" width="390" height="30" as="geometry" />
         </mxCell>
 
       </root>
