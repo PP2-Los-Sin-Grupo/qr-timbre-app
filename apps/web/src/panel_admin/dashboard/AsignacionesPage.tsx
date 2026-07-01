@@ -1,53 +1,66 @@
 import { useNavigate } from 'react-router-dom';
 import { useUsuarios } from '../contexto/UsuariosContexto';
+import { Box, Button, Paper, Stack, Typography } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 export default function AsignacionesPage() {
   const navigate = useNavigate();
   const { usuarios, eliminarUsuario } = useUsuarios();
 
   return (
-    <div style={ { width: '100%', minHeight: '100vh', background: '#0f172a', color: 'white', padding: '40px', boxSizing: 'border-box' } }>
-
+    <Box sx={{width: "80%", height: "auto", bgcolor: "background.default", color: "text.primary", p: 5,}}>
+  
       <div style={ { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' } }>
         <h1 style={ { margin: 0 } }>Asignaciones</h1>
-        <button
-          onClick={ () => navigate( '/dashboard' ) }
-          style={ { background: '#1e293b', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 20px', cursor: 'pointer', fontSize: '14px' } }
-        >
-          ← Volver
-        </button>
+        <Button variant="contained" startIcon={<ArrowBackIcon />} 
+          onClick={() => navigate("/dashboard")}
+          sx={{ bgcolor: "primary.main", color: "primary.contrastText", borderRadius: 2, px: 2.5, py: 1.2, fontSize: 14, textTransform: "none",
+          }}>
+            Volver
+        </Button>
       </div>
 
-      { usuarios.length === 0 ? (
-        <p style={ { color: '#94a3b8' } }>No hay usuarios asignados todavía.</p>
+  
+      {usuarios.length === 0 ? (
+        <Typography color="text.secondary">
+          No hay usuarios asignados todavía.
+        </Typography>
       ) : (
-        <div style={ { display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '600px' } }>
-          { usuarios.map( usuario => (
-            <div key={usuario.id} style={ {
-              background: '#1e293b',
-              borderRadius: '14px',
-              padding: '20px 24px',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            } }>
-              <div>
-                <h3 style={ { margin: '0 0 6px', fontSize: '16px' } }>{usuario.nombreCompleto}</h3>
-                <span style={ { color: '#94a3b8', fontSize: '13px' } }>
+        <Stack spacing={2} maxWidth={600}>
+          {usuarios.map((usuario) => (
+            <Paper
+              key={usuario.id}
+              sx={{
+                p: 3,
+                borderRadius: 3,
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                bgcolor: "background.paper",
+              }}
+            >
+              <Box>
+                <Typography variant="subtitle1" fontWeight={600}>
+                  {usuario.nombreCompleto}
+                </Typography>
+
+                <Typography variant="body2" color="text.secondary">
                   Piso {usuario.piso} — Depto {usuario.departamento}
-                </span>
-              </div>
-              <button
-                onClick={ () => eliminarUsuario( usuario.id ) }
-                style={ { background: '#7f1d1d', color: 'white', border: 'none', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', fontSize: '13px' } }
+                </Typography>
+              </Box>
+
+              {/* Botón */}
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => eliminarUsuario(usuario.id)}
               >
                 Quitar
-              </button>
-            </div>
-          ) ) }
-        </div>
-      ) }
-
-    </div>
+              </Button>
+            </Paper>
+          ))}
+        </Stack>
+      )}
+    </Box>
   );
 }
