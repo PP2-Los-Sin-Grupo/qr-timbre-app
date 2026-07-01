@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" version="24.7.5">
+  <diagram id="diagrama-flujo" name="Flujo del Sistema">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" arrows="1" page="1" pageWidth="1200" pageHeight="700">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- TITULO -->
+        <mxCell id="title" value="Flujo del Sistema - Portero Electronico Digital" style="text;html=1;fontSize=18;fontStyle=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="0" y="10" width="1200" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ============ FILA SUPERIOR: RESIDENTE ============ -->
+        <mxCell id="label-residente" value="Residente (App Ionic / Angular)" style="text;html=1;fontSize=13;fontStyle=4;align=left;verticalAlign=middle;strokeColor=none;fillColor=none;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="40" y="65" width="300" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Paso 1 -->
+        <mxCell id="step1" value="1. Descarga la app" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="100" width="150" height="46" as="geometry" />
+        </mxCell>
+        <!-- Paso 2 -->
+        <mxCell id="step2" value="2. Login / Registro&#xa;(auth custom)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="100" width="150" height="46" as="geometry" />
+        </mxCell>
+        <!-- Paso 3 -->
+        <mxCell id="step3" value="3. Firestore onSnapshot&#xa;escucha notificaciones" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="100" width="150" height="46" as="geometry" />
+        </mxCell>
+        <!-- Paso 4 -->
+        <mxCell id="step4" value="4. Vincula Telegram (opcional)&#xa;Bot API sendMessage" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="690" y="100" width="150" height="46" as="geometry" />
+        </mxCell>
+        <!-- Paso 5 -->
+        <mxCell id="step5" value="5. Abre/Rechaza visita&#xa;(actualiza estado en DB)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="900" y="100" width="150" height="46" as="geometry" />
+        </mxCell>
+
+        <!-- Flechas fila superior -->
+        <mxCell id="arrow1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6c8ebf;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="step1" target="step2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6c8ebf;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="step2" target="step3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6c8ebf;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="step3" target="step4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6c8ebf;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="step4" target="step5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Conexion step3 → DB -->
+        <mxCell id="conn-step3-db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#6c8ebf;strokeWidth=1;dashed=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="step3" target="db-box">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============ FILA INFERIOR: VISITANTE ============ -->
+        <mxCell id="label-visitante" value="Visitante (Web App React)" style="text;html=1;fontSize=13;fontStyle=4;align=left;verticalAlign=middle;strokeColor=none;fillColor=none;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="40" y="345" width="300" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Paso 6 -->
+        <mxCell id="step6" value="6. Escanea QR /&#xa;abre enlace web" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="380" width="140" height="46" as="geometry" />
+        </mxCell>
+        <!-- Paso 7 -->
+        <mxCell id="step7" value="7. Selecciona piso&#xa;y departamento" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="248" y="380" width="140" height="46" as="geometry" />
+        </mxCell>
+        <!-- Paso 8 -->
+        <mxCell id="step8" value="8. Presiona&#xa;&quot;Llamar&quot;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="436" y="380" width="140" height="46" as="geometry" />
+        </mxCell>
+        <!-- Paso 9 -->
+        <mxCell id="step9" value="9. crearNotificacion()&#xa;en Firestore" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="624" y="380" width="140" height="46" as="geometry" />
+        </mxCell>
+
+        <!-- Flechas fila inferior -->
+        <mxCell id="arrow5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#b85450;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="step6" target="step7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#b85450;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="step7" target="step8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#b85450;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="step8" target="step9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Conexion step9 → DB -->
+        <mxCell id="conn-step9-db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#b85450;strokeWidth=1;dashed=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" parent="1" source="step9" target="db-box">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============ DB BOX CENTRAL ============ -->
+        <mxCell id="db-box" value="&lt;b&gt;Firebase / Firestore&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="250" y="190" width="700" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Colecciones dentro del DB box -->
+        <mxCell id="db-collections" value="departamentos { piso, numero, activo }&#xa;usuarios { nombre, email, password_hash, departamentoId, telegramChatId }&#xa;notificaciones { residenteUid, estado (nueva | vista | ignorada), creadoEn, visitante }" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;fontFamily=Consolas;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="265" y="218" width="670" height="36" as="geometry" />
+        </mxCell>
+
+        <!-- Flecha DB → respuesta -->
+        <mxCell id="conn-db-visitante" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#82b366;strokeWidth=2;dashed=1;fontSize=11;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="975" y="225" as="sourcePoint" />
+            <mxPoint x="975" y="355" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ============ PARTE INFERIOR DERECHA: NOTIFICACION ============ -->
+        <mxCell id="label-notif" value="Notificacion" style="text;html=1;fontSize=13;fontStyle=4;align=left;verticalAlign=middle;strokeColor=none;fillColor=none;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="850" y="345" width="200" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Paso 10 -->
+        <mxCell id="step10" value="10. onSnapshot&#xa;detecta nuevo doc" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="860" y="380" width="140" height="46" as="geometry" />
+        </mxCell>
+        <!-- Paso 11 -->
+        <mxCell id="step11" value="11. Telegram Bot&#xa;sendMessage() (opcional)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="860" y="450" width="140" height="46" as="geometry" />
+        </mxCell>
+        <!-- Paso 12 -->
+        <mxCell id="step12" value="12. NOTIFICACION&#xa;Alguien llama!" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="875" y="525" width="110" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Flechas notificacion -->
+        <mxCell id="arrow8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#82b366;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="step10" target="step11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#82b366;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="step11" target="step12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Flecha DB → step10 -->
+        <mxCell id="conn-db-step10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#82b366;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="db-box" target="step10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Flecha step12 → step5 (abre puerta) -->
+        <mxCell id="conn-step12-step5" value="Abre puerta → estado: vista" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#82b366;strokeWidth=2;dashed=1;fontSize=10;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="step12" target="step5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============ LEYENDA ============ -->
+        <mxCell id="legend-box" value="Leyenda" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="40" y="480" width="760" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="leg-1" value="Azul = Residente (configuracion inicial)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="55" y="503" width="220" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="leg-2" value="Rojo = Visitante (genera el evento)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="55" y="525" width="220" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="leg-3" value="Verde = Notificacion / respuesta" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="55" y="547" width="220" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="leg-4" value="Amarillo = Firestore (base de datos central)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="55" y="569" width="280" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="leg-5" value="Linea discontinua = conexion con la base de datos" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="400" y="503" width="280" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="leg-6" value="Rombo = decision del residente" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="400" y="525" width="280" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="leg-7" value="Estados de notificacion: nueva → vista / ignorada" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontFamily=Consolas;fontColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="400" y="547" width="380" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="leg-8" value="Borde punteado = paso opcional (Telegram: solo para avisar con la app cerrada; el aviso in-app funciona sin vincular)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=11;fontColor=#999999;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="400" y="569" width="390" height="30" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
