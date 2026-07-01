@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, addDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
+import {Box, Typography, Button, Paper, Alert, FormControl, InputLabel, Select, MenuItem, TextField,} from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import AddIcon from "@mui/icons-material/Add";
 
 type Estado = 'idle' | 'generando' | 'exito' | 'error';
 
@@ -107,132 +110,134 @@ export default function DepartamentosPage() {
     .sort();
 
   return (
-    <div style={ { width: '100%', minHeight: '100vh', background: '#0f172a', color: 'white', padding: '40px', boxSizing: 'border-box' } }>
+    <Box 
+      sx={{height: "auto", bgcolor: "background.default", color: "text.primary", p: 4,}}>
 
       <div style={ { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' } }>
         <h1 style={ { margin: 0 } }>Departamentos</h1>
-        <button onClick={ () => navigate( '/dashboard' ) } style={ botonVolver }>← Volver</button>
+        <Button variant="contained" startIcon={<ArrowBackIcon />} 
+          onClick={() => navigate("/dashboard")}
+          sx={{ bgcolor: "primary.main", color: "primary.contrastText", borderRadius: 2, px: 2.5, py: 1.2, fontSize: 14, textTransform: "none",}}>
+            Volver
+        </Button>
       </div>
 
-      { departamentosGuardados.length > 0 && (
-        <div style={ { color: '#4ade80', background: '#1e293b', borderRadius: '12px', padding: '14px 20px', marginBottom: '24px', fontSize: '14px' } }>
-          Actualmente guardados: <strong>{departamentosGuardados.length} departamentos</strong>
-        </div>
-      ) }
+      {departamentosGuardados.length > 0 && (
+        <Alert severity="success" sx={{ mb: 4 }}>
+          Actualmente guardados: <strong> {departamentosGuardados.length} departamentos</strong>
+        </Alert>
+      )}
 
-      <div style={ { display: 'flex', gap: '32px', alignItems: 'flex-start', flexWrap: 'wrap' } }>
+      <Box 
+      sx={{ display: "flex", gap: 4, alignItems: "flex-start", flexWrap: "wrap",}}>
+      
+      <Paper
+        elevation={3}
+        sx={{ p: 4, width: 300, flexShrink: 0, borderRadius: 3, }}>
+        <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
+          Agregar un departamento
+        </Typography>
 
-        {/* Agregar un departamento */}
-        <div style={ { background: '#1e293b', borderRadius: '16px', padding: '30px', width: '300px', flexShrink: 0 } }>
-          <h2 style={ { marginTop: 0, marginBottom: '20px', fontSize: '18px' } }>Agregar un departamento</h2>
+        <FormControl fullWidth>
+          <InputLabel id="piso-label">Piso</InputLabel>
 
-          <label style={ labelStyle }>Piso</label>
-          <select value={nuevoPiso}
-            onChange={ e => setNuevoPiso( e.target.value ) }
-            style={ inputStyle }>
-            <option value="">— Seleccioná un piso —</option>
-            { Array.from( { length: 20 }, ( _, i ) => i + 1 ).map( n => (
-              <option key={n} value={String( n )}>{ NOMBRES_PISO[ n ] ?? `Piso ${n}` }</option>
-            ) ) }
-          </select>
-
-          <label style={ { ...labelStyle, marginTop: '16px' } }>Departamento (letra)</label>
-          <input type="text" value={nuevoNumero}
-            onChange={ e => setNuevoNumero( e.target.value ) }
-            placeholder="Ej: A" style={ inputStyle } />
-
-          <p style={ { color: '#64748b', fontSize: '13px', margin: '14px 0 0' } }>
-            Se guarda con <strong>activo: true</strong> por defecto.
-          </p>
-
-          { mensaje && (
-            <p style={ { color: estado === 'exito' ? '#4ade80' : '#f87171', fontSize: '14px', margin: '12px 0 0' } }>
-              {mensaje}
-            </p>
-          ) }
-
-          <button
-            onClick={ agregarUno }
-            disabled={ !nuevoPiso || !nuevoNumero }
-            style={ {
-              marginTop: '20px', width: '100%', padding: '12px',
-              background: ( !nuevoPiso || !nuevoNumero ) ? '#334155' : '#3b82f6',
-              color: 'white', border: 'none', borderRadius: '10px', fontSize: '15px',
-              cursor: ( !nuevoPiso || !nuevoNumero ) ? 'not-allowed' : 'pointer',
-            } }
+          <Select
+            labelId="piso-label"
+            value={nuevoPiso}
+            label="Piso"
+            onChange={(e) => setNuevoPiso(e.target.value)}
           >
-            Agregar departamento
-          </button>
-        </div>
+            <MenuItem value="">
+              <em>Seleccioná un piso</em>
+            </MenuItem>
 
-        {/* Grilla: filas = pisos, columnas = letras */}
-        { departamentosGuardados.length > 0 && (
-          <div style={ { flex: 1, minWidth: '280px' } }>
-            <h2 style={ { marginTop: 0, marginBottom: '20px', fontSize: '18px' } }>Vista del edificio</h2>
+            {Array.from({ length: 20 }, (_, i) => i + 1).map((n) => (
+              <MenuItem key={n} value={String(n)}>
+                {NOMBRES_PISO[n] ?? `Piso ${n}`}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
-            <div style={ { overflowX: 'auto' } }>
-              <table style={ { borderCollapse: 'separate', borderSpacing: '6px' } }>
-                <thead>
-                  <tr>
-                    <th style={ thEtiqueta }></th>
-                    { letrasUnicas.map( letra => (
-                      <th key={letra} style={ thEncabezado }>Depto {letra}</th>
-                    ) ) }
-                  </tr>
-                </thead>
-                <tbody>
-                  { pisosUnicos.map( piso => (
-                    <tr key={piso}>
-                      <td style={ thEtiqueta }>
-                        { NOMBRES_PISO[ Number( piso ) ] ?? `Piso ${piso}` }
-                      </td>
-                      { letrasUnicas.map( letra => {
-                        const depto = departamentosGuardados.find( d => d.piso === piso && d.numero === letra );
-                        return (
-                          <td key={letra} style={ depto ? celdaActiva : celdaVacia }>
-                            { depto ? `${ Number(piso) === 1 ? "PB" : String(Number(piso) - 1) }${letra}` : "—" }
-                          </td>
-                        );
-                      } ) }
-                    </tr>
-                  ) ) }
-                </tbody>
-              </table>
-            </div>
-          </div>
-        ) }
+        <TextField
+          fullWidth
+          label="Departamento"
+          placeholder="Ej: A"
+          value={nuevoNumero}
+          onChange={(e) => setNuevoNumero(e.target.value)}
+          sx={{ mt: 3 }}
+        />
 
-      </div>
-    </div>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ mt: 2 }}
+        >
+          Se guarda con <strong>activo: true</strong> por defecto.
+        </Typography>
+
+        {mensaje && (
+          <Alert severity={estado === "exito" ? "success" : "error"}
+            sx={{ mt: 2 }}>
+            {mensaje}
+          </Alert>
+        )}
+
+        <Button fullWidth variant="contained" startIcon={<AddIcon />}
+          onClick={agregarUno} disabled={!nuevoPiso || !nuevoNumero}
+          sx={{ mt: 3 }}>
+          Agregar departamento
+        </Button>
+      </Paper>
+
+        {departamentosGuardados.length > 0 && (
+          <Box sx={{ flex: 1, minWidth: 280 }}>
+            <Typography variant="h6" sx={{ mb: 3 }}>
+              Vista del edificio
+            </Typography>
+
+            <Box sx={{ overflowX: "auto" }}>
+              <Box
+                sx={{display: "grid", gridTemplateColumns: `140px repeat(${letrasUnicas.length}, 70px)`, gap: 1, alignItems: "center", }}>
+              <Box />
+
+                {letrasUnicas.map((letra) => (
+                  <Paper key={letra}
+                    sx={{p: 1, textAlign: "center", bgcolor: "primary.dark", color: "primary.contrastText", fontWeight: 600,}}>
+                    Depto {letra}
+                  </Paper>
+                ))}
+
+                {pisosUnicos.map((piso) => (
+                  <Box key={piso}
+                    sx={{display: "contents",}}>
+                    
+                    <Typography
+                      sx={{fontWeight: 600, color: "text.secondary",}}>
+                      {NOMBRES_PISO[Number(piso)]}
+                    </Typography>
+
+                    {letrasUnicas.map((letra) => {
+                      const depto = departamentosGuardados.find(
+                        (d) => d.piso === piso && d.numero === letra
+                      );
+
+                      return (
+                        <Paper key={`${piso}-${letra}`}
+                          elevation={depto ? 2 : 0}
+                          sx={{height: 56, display: "flex", alignItems: "center", justifyContent: "center", bgcolor: depto ? "background.paper" : "action.hover", color: depto  ? "text.primary"  : "text.disabled", fontWeight: 600,}}>
+                          {depto ? `${Number(piso) === 1 ? "PB" : Number(piso) - 1}${letra}` : "—"}
+                        </Paper>
+                      );
+                    })}
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          </Box>
+        )}
+
+      </Box>
+    </Box>
   );
 }
-
-const botonVolver: React.CSSProperties = {
-  background: '#1e293b', color: 'white', border: 'none',
-  borderRadius: '10px', padding: '10px 20px', cursor: 'pointer', fontSize: '14px',
-};
-const labelStyle: React.CSSProperties = {
-  display: 'block', marginBottom: '6px', color: '#94a3b8', fontSize: '14px',
-};
-const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '10px 14px', background: '#0f172a',
-  border: '1px solid #334155', borderRadius: '8px', color: 'white',
-  fontSize: '15px', boxSizing: 'border-box',
-};
-const thEncabezado: React.CSSProperties = {
-  background: '#1e3a5f', color: '#93c5fd', padding: '8px 14px',
-  borderRadius: '8px', fontSize: '13px', textAlign: 'center', fontWeight: 600,
-};
-const thEtiqueta: React.CSSProperties = {
-  color: '#94a3b8', padding: '8px 12px', fontSize: '13px',
-  textAlign: 'right', fontWeight: 600, whiteSpace: 'nowrap',
-};
-const celdaActiva: React.CSSProperties = {
-  background: '#1e293b', color: '#e2e8f0', padding: '12px 18px',
-  borderRadius: '10px', textAlign: 'center', fontSize: '14px',
-  fontWeight: 600, minWidth: '60px',
-};
-const celdaVacia: React.CSSProperties = {
-  background: '#0f172a', color: '#334155', padding: '12px 18px',
-  borderRadius: '10px', textAlign: 'center', fontSize: '14px', minWidth: '60px',
-};

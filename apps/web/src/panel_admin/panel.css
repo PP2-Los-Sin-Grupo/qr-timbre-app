@@ -1,7 +1,3 @@
-/* Estilos comunes del panel de administracion.
-   Unifica colores y formato de inputs y botones en gestion y crear usuarios. */
-
-/* ── Inputs y selects ── */
 .panel-input {
   width: 100%;
   display: block;

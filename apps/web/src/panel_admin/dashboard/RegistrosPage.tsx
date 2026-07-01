@@ -3,6 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useUsuarios } from '../contexto/UsuariosContexto';
 import type { Usuario } from '../contexto/UsuariosContexto';
 
+import { Box, Typography, Button, Paper, FormControl, InputLabel, Select, MenuItem, TextField, Alert, Stack, } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import SendIcon from "@mui/icons-material/Send";
+
 const TELEGRAM_TOKEN = '8538734871:AAFtB08xNbZWG55tbhRGu71dcayhkzn-51A';
 const TELEGRAM_CHAT_ID = '915678499';
 
@@ -80,95 +84,111 @@ export default function RegistrosPage() {
   };
 
   return (
-    <div style={ { width: '100%', minHeight: '100vh', background: '#0f172a', color: 'white', padding: '40px', boxSizing: 'border-box' } }>
+    <Box sx={{width: "80%", minHeight: "100%", height: "auto", bgcolor: "background.default", color: "text.primary", p: 5,}}>
 
       <div style={ { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' } }>
         <h1 style={ { margin: 0 } }>Registros</h1>
-        <button onClick={ () => navigate( '/dashboard' ) } style={ botonVolver }>← Volver</button>
+        <Button variant="contained" startIcon={<ArrowBackIcon />} 
+          onClick={() => navigate("/dashboard")}
+          sx={{ bgcolor: "primary.main", color: "primary.contrastText", borderRadius: 2, px: 2.5, py: 1.2, fontSize: 14, textTransform: "none",
+          }}>
+            Volver
+        </Button>
       </div>
 
-      <div style={ { maxWidth: '560px' } }>
 
-        <label style={ labelStyle }>Seleccioná un usuario</label>
-        <select onChange={ e => handleSeleccion( e.target.value ) } defaultValue="" style={ selectStyle }>
-          <option value="" disabled>— Elegí un usuario —</option>
-          { usuarios.length === 0 && <option disabled>No hay usuarios registrados</option> }
-          { usuarios.map( u => (
-            <option key={u.id} value={u.id}>
-              {u.nombreCompleto} — {nombrePiso( u.piso )} Depto {u.departamento}
-            </option>
-          ) ) }
-        </select>
+      <Box>
 
-        { usuarioSeleccionado && (
-          <div style={ { background: '#1e293b', borderRadius: '14px', padding: '20px 24px', margin: '20px 0', display: 'flex', flexDirection: 'column', gap: '6px' } }>
-            <p style={ { margin: 0, fontSize: '17px', fontWeight: 600 } }>{usuarioSeleccionado.nombreCompleto}</p>
-            <p style={ { margin: 0, color: '#94a3b8', fontSize: '14px' } }>
-              {nombrePiso( usuarioSeleccionado.piso )} — Depto {usuarioSeleccionado.departamento}
-            </p>
-            <p style={ { margin: 0, color: '#38bdf8', fontSize: '14px' } }>{usuarioSeleccionado.email}</p>
-          </div>
-        ) }
+        <FormControl fullWidth>
+          <InputLabel id="usuario-label">
+            Seleccioná un usuario
+          </InputLabel>
 
-        { usuarioSeleccionado && (
+          <Select
+            labelId="usuario-label"
+            value={usuarioSeleccionado?.id ?? ""}
+            label="Seleccioná un usuario"
+            onChange={(e) => handleSeleccion(e.target.value)}
+          >
+            {usuarios.length === 0 ? (
+              <MenuItem disabled value="">
+                No hay usuarios registrados
+              </MenuItem>
+            ) : (
+              usuarios.map((u) => (
+                <MenuItem key={u.id} value={u.id}>
+                  {u.nombreCompleto} — {nombrePiso(u.piso)} Depto {u.departamento}
+                </MenuItem>
+              ))
+            )}
+          </Select>
+        </FormControl>
+
+        {usuarioSeleccionado && (
           <>
-            <label style={ { ...labelStyle, marginTop: '8px' } }>Mensaje</label>
-            <textarea
-              value={mensaje}
-              onChange={ e => setMensaje( e.target.value ) }
-              placeholder="Escribí el mensaje para enviar al residente..."
+            <Paper elevation={3}
+              sx={{mt: 3, p: 3, borderRadius: 3,}}>
+              <Stack spacing={1}>
+                <Typography variant="h6">
+                  {usuarioSeleccionado.nombreCompleto}
+                </Typography>
+
+                <Typography color="text.secondary">
+                  {nombrePiso(usuarioSeleccionado.piso)} — Depto{" "}
+                  {usuarioSeleccionado.departamento}
+                </Typography>
+
+                <Typography color="primary">
+                  {usuarioSeleccionado.email}
+                </Typography>
+              </Stack>
+            </Paper>
+
+            <TextField
+              fullWidth
+              multiline
               rows={5}
-              style={ textareaStyle }
+              label="Mensaje"
+              value={mensaje}
+              onChange={(e) => setMensaje(e.target.value)}
+              placeholder="Escribí el mensaje para enviar al residente..."
+              sx={{ mt: 3 }}
             />
 
-            { feedback && (
-              <p style={ { color: estadoEnvio === 'exito' ? '#4ade80' : '#f87171', fontSize: '14px', margin: '8px 0' } }>
+            {feedback && (
+              <Alert
+                severity={estadoEnvio === "exito" ? "success" : "error"}
+                sx={{ mt: 2 }}
+              >
                 {feedback}
-              </p>
-            ) }
+              </Alert>
+            )}
 
-            <button
+            <Button
+              fullWidth
+              variant="contained"
+              size="large"
+              startIcon={<SendIcon />}
               onClick={enviarMensaje}
-              disabled={ !mensaje.trim() || estadoEnvio === 'enviando' }
-              style={ {
-                marginTop: '12px', width: '100%', padding: '14px',
-                background: ( !mensaje.trim() || estadoEnvio === 'enviando' ) ? '#334155' : '#3b82f6',
-                color: 'white', border: 'none', borderRadius: '10px',
-                fontSize: '15px', fontWeight: 600,
-                cursor: ( !mensaje.trim() || estadoEnvio === 'enviando' ) ? 'not-allowed' : 'pointer',
-              } }
+              disabled={
+                !mensaje.trim() || estadoEnvio === "enviando"
+              }
+              sx={{ mt: 3 }}
             >
-              { estadoEnvio === 'enviando' ? 'Enviando...' : '📨 Enviar mensaje por Telegram' }
-            </button>
+              {estadoEnvio === "enviando"
+                ? "Enviando..."
+                : "Enviar mensaje por Telegram"}
+            </Button>
           </>
-        ) }
+        )}
 
-        { usuarios.length === 0 && (
-          <p style={ { color: '#f87171', fontSize: '14px', marginTop: '16px' } }>
-            ⚠️ No hay usuarios registrados. Creá usuarios primero desde la sección Usuarios.
-          </p>
-        ) }
+        {usuarios.length === 0 && (
+          <Alert severity="warning" sx={{ mt: 3 }}>
+            No hay usuarios registrados. Creá usuarios primero desde la sección Usuarios.
+          </Alert>
+        )}
 
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
-
-const botonVolver: React.CSSProperties = {
-  background: '#1e293b', color: 'white', border: 'none',
-  borderRadius: '10px', padding: '10px 20px', cursor: 'pointer', fontSize: '14px',
-};
-const labelStyle: React.CSSProperties = {
-  display: 'block', marginBottom: '8px', color: '#94a3b8', fontSize: '14px',
-};
-const selectStyle: React.CSSProperties = {
-  width: '100%', padding: '12px 14px', background: '#1e293b',
-  border: '1px solid #334155', borderRadius: '10px', color: 'white',
-  fontSize: '15px', boxSizing: 'border-box', cursor: 'pointer',
-};
-const textareaStyle: React.CSSProperties = {
-  width: '100%', padding: '14px', background: '#1e293b',
-  border: '1px solid #334155', borderRadius: '10px', color: 'white',
-  fontSize: '15px', boxSizing: 'border-box', resize: 'vertical',
-  fontFamily: 'inherit', outline: 'none',
-};

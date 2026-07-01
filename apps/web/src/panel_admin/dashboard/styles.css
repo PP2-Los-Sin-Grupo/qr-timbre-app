@@ -1,12 +1,13 @@
-.css-13zd3o6-MuiStack-root {
-  margin: 0px;
-  width: 100%;
-  min-height: 100vh;
-  height: auto;
+.css-3ykkg7-MuiStack-root, .css-9by7q7-MuiStack-root{
+  height: auto !important;
+  min-height: 100vh !important;
 }
 
 .contenedor-dashboard {
   width: 80%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .cabecera {
@@ -37,8 +38,9 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
-  height: 160px;
+  height: auto !important;
   padding: 0 30px;
+  margin-bottom: 30px;
 }
 
 .tarjeta-menu {

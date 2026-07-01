@@ -7,6 +7,10 @@ import { collection, getDocs } from "firebase/firestore";
 import { useUsuarios } from "../contexto/UsuariosContexto";
 import { db } from "../../firebase/config";
 
+import {Box, Stack, Button, TextField, FormControl, InputLabel, Select, MenuItem, Alert,} from "@mui/material";
+
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
 interface DeptoStorage {
   id: string;
   piso: string;
@@ -41,8 +45,6 @@ export default function CrearUsuarioPage() {
   const [ deptosDisponibles, setDeptosDisponibles ] = useState<string[]>( [] );
   const [ todosDeptos, setTodosDeptos ] = useState<DeptoStorage[]>( [] );
 
-  /* Cargar los departamentos LIBRES desde Firestore al montar.
-     Un departamento esta libre si ningun usuario lo tiene asignado (departamentoId). */
   useEffect( () => {
     let activo = true;
     ( async () => {
@@ -75,7 +77,6 @@ export default function CrearUsuarioPage() {
     return () => { activo = false; };
   }, [] );
 
-  /* Cuando cambia el piso, actualizar las letras disponibles */
   useEffect( () => {
     if ( !pisoSeleccionado ) { setDeptosDisponibles( [] ); setDeptoSeleccionado( "" ); return; }
     const letras = todosDeptos
@@ -105,54 +106,73 @@ export default function CrearUsuarioPage() {
   };
 
   return (
-    <div className="contenedor-crear">
+    <Box sx={{width: "80%", height: "auto", bgcolor: "background.default", color: "text.primary", p: 5,}}>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-        <h1 style={{ margin: 0 }}>Nuevo Usuario</h1>
-        <button className="panel-btn panel-btn-secundario" onClick={ () => navigate( "/gestion-usuarios" ) }>← Volver</button>
+      <div style={ { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' } }>
+        <h1 style={ { margin: 0 } }>Nuevo Usuario</h1>
+        <Button variant="contained" startIcon={<ArrowBackIcon />} 
+          onClick={() => navigate("/dashboard")}
+          sx={{ bgcolor: "primary.main", color: "primary.contrastText", borderRadius: 2, px: 2.5, py: 1.2, fontSize: 14, textTransform: "none",
+          }}>
+            Volver
+        </Button>
       </div>
 
-      <input className="panel-input" placeholder="Nombre completo" value={nombreCompleto}
-        onChange={ e => setNombreCompleto( capitalizarNombre( e.target.value ) ) } />
+      <Stack spacing={3}>
+        <TextField fullWidth label="Nombre completo" value={nombreCompleto}
+          onChange={(e) => setNombreCompleto(capitalizarNombre(e.target.value))}/>
 
-      <input className="panel-input" placeholder="Email" value={email}
-        onChange={ e => setEmail( e.target.value ) } />
+      <TextField fullWidth label="Email" type="email"  value={email}  onChange={(e) => setEmail(e.target.value)}/>
 
-      { pisosDisponibles.length === 0 ? (
-        <p style={{ color: '#f87171', fontSize: '14px' }}>
-          ⚠️ No hay departamentos generados. Generá los departamentos primero desde el Dashboard.
-        </p>
-      ) : (
+      {pisosDisponibles.length === 0 ? (
+        <Alert severity="warning">No hay departamentos generados. Generá los departamentos primero desde el Dashboard.
+        </Alert>) : (
         <>
-          <select value={pisoSeleccionado} onChange={ e => setPisoSeleccionado( e.target.value ) } className="panel-input">
-            <option value="">— Seleccioná un piso —</option>
-            { pisosDisponibles.map( piso => (
-              <option key={piso} value={piso}>
-                { NOMBRES_PISO[ Number( piso ) ] ?? `Piso ${piso}` }
-              </option>
-            ) ) }
-          </select>
+          <FormControl fullWidth>
+            <InputLabel id="piso-label">Piso</InputLabel>
 
-          <select
-            value={deptoSeleccionado}
-            onChange={ e => setDeptoSeleccionado( e.target.value ) }
-            disabled={ !pisoSeleccionado }
-            className="panel-input"
-          >
-            <option value="">— Seleccioná un departamento —</option>
-            { deptosDisponibles.map( letra => (
-              <option key={letra} value={letra}>Depto {letra}</option>
-            ) ) }
-          </select>
+            <Select labelId="piso-label" value={pisoSeleccionado} label="Piso" onChange={(e) => setPisoSeleccionado(e.target.value)}>
+              <MenuItem value="">
+                <em>Seleccioná un piso</em>
+              </MenuItem>
+
+              {pisosDisponibles.map((piso) => (
+                <MenuItem key={piso} value={piso}>
+                  {NOMBRES_PISO[Number(piso)] ?? `Piso ${piso}`}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl fullWidth disabled={!pisoSeleccionado}>
+            <InputLabel id="depto-label">Departamento</InputLabel>
+
+            <Select labelId="depto-label" value={deptoSeleccionado} label="Departamento"
+              onChange={(e) => setDeptoSeleccionado(e.target.value)}>
+              <MenuItem value="">
+                <em>Seleccioná un departamento</em>
+              </MenuItem>
+
+              {deptosDisponibles.map((letra) => (
+                <MenuItem key={letra} value={letra}>
+                  Depto {letra}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </>
-      ) }
+      )}
+    </Stack>
 
-      { errorMsg && <p style={{ color: '#f87171', fontSize: '14px' }}>{errorMsg}</p> }
+    {errorMsg && (
+      <Alert severity="error">{errorMsg}
+      </Alert>
+    )}
 
-      <button className="panel-btn panel-btn-primario panel-btn-bloque" onClick={crearUsuario}>
-        Crear y enviar credenciales
-      </button>
+    <Button fullWidth variant="contained" size="large" sx={{ mt: 3 }}
+      onClick={crearUsuario}>Crear y enviar credenciales
+    </Button>
 
-    </div>
+   </Box>
   );
 }

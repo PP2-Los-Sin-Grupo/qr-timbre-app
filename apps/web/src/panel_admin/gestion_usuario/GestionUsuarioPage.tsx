@@ -5,7 +5,14 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUsuarios } from "../contexto/UsuariosContexto";
 import type { Usuario } from "../contexto/UsuariosContexto";
-import { Box, CircularProgress } from "@mui/material";
+import { Alert, Box, Button, CircularProgress, Paper, Stack, TextField, Typography } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
+import SaveIcon from "@mui/icons-material/Save";
+import CloseIcon from "@mui/icons-material/Close";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
 
 export default function GestionUsuarioPage() {
   const navigate = useNavigate();
@@ -35,84 +42,115 @@ export default function GestionUsuarioPage() {
   };
 
   return (
-    <div className="contenedor-usuarios">
+    <Box sx={{ width: "80%", padding: 4, margin: "0 auto", bgcolor: "background.paper", borderRadius: 2, boxShadow: 3, }}>
 
-      <div className="encabezado">
-        <h1>Usuarios</h1>
-        <div style={{ display: "flex", gap: "24px", alignItems: "center" }}>
-          <button className="boton-agregar" onClick={ () => navigate( "/crear-usuario" ) }>+</button>
-          <button className="panel-btn panel-btn-secundario" onClick={ () => navigate( "/dashboard" ) }>← Volver</button>
-        </div>
+      <div style={ {  display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' } }>
+        <h1 style={ { margin: 0 } }>Usuarios</h1>
+
+        <Stack direction="row" spacing={2}>
+          <Button variant="contained" startIcon={<AddIcon />}
+            onClick={() => navigate("/crear-usuario")}>Nuevo
+          </Button>
+
+          <Button variant="outlined" startIcon={<ArrowBackIcon />}
+            onClick={() => navigate("/dashboard")}>Volver
+          </Button>
+        </Stack>
       </div>
 
-      <input
-        className="panel-input"
-        type="text"
-        placeholder="Buscar usuario..."
-        value={textoBusqueda}
-        onChange={ e => setTextoBusqueda( e.target.value ) }
-      />
+      <TextField fullWidth label="Buscar usuario" value={textoBusqueda}
+        onChange={(e) => setTextoBusqueda(e.target.value)}
+        sx={{ mb: 3 }}/>
 
-      <Box className="lista-usuarios"
-        sx={{
-          bgcolor: "primary.main",
-          color: "primary.contrastText",
-          borderRadius: "12px",
-        }}>
+      <Stack spacing={2}>
         {cargando ? (
-          <Box sx={{ display: "flex", justifyContent: "center", padding: "24px" }}>
-            <CircularProgress color="inherit" />
+          <Box display="flex" justifyContent="center" py={4}>
+            <CircularProgress />
           </Box>
         ) : usuariosFiltrados.length === 0 ? (
-          <p>No hay usuarios registrados</p>
+          <Alert severity="info">
+            No hay usuarios registrados.
+          </Alert>
         ) : (
-          usuariosFiltrados.map( usuario => (
-            <div key={usuario.id} className="usuario">
+          usuariosFiltrados.map((usuario) => (
+            <Paper key={usuario.id} elevation={2}
+              sx={{ p: 3 }}
+            >
+              {editandoId === usuario.id ? (
+                <Stack spacing={4}>
+                  
+                  <TextField label="Nombre completo" value={formEditar.nombreCompleto}
+                    onChange={(e) =>
+                      setFormEditar((p) => ({
+                        ...p,
+                        nombreCompleto: e.target.value,
+                      }))
+                    }/>
 
-              { editandoId === usuario.id ? (
-                /* ── Modo edición ── */
-                <div>
-                  <input className="panel-input" placeholder="Nombre completo" value={formEditar.nombreCompleto}
-                    onChange={ e => setFormEditar( p => ({ ...p, nombreCompleto: e.target.value }) ) } />
-                  <input className="panel-input" placeholder="Email" value={formEditar.email}
-                    onChange={ e => setFormEditar( p => ({ ...p, email: e.target.value }) ) } />
-                  <input className="panel-input" placeholder="Piso" value={formEditar.piso}
-                    onChange={ e => setFormEditar( p => ({ ...p, piso: e.target.value }) ) } />
-                  <input className="panel-input" placeholder="Departamento" value={formEditar.departamento}
-                    onChange={ e => setFormEditar( p => ({ ...p, departamento: e.target.value }) ) } />
-                  <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
-                    <button onClick={guardarEdicion} className="panel-btn panel-btn-primario">
-                      Guardar
-                    </button>
-                    <button onClick={ () => setEditandoId( null ) } className="panel-btn panel-btn-secundario">
-                      Cancelar
-                    </button>
-                  </div>
-                </div>
+                  <TextField label="Email" value={formEditar.email}
+                    onChange={(e) =>
+                      setFormEditar((p) => ({
+                        ...p,
+                        email: e.target.value,
+                      }))
+                    }/>
+
+                  <TextField label="Piso" value={formEditar.piso}
+                    onChange={(e) =>
+                      setFormEditar((p) => ({
+                        ...p,
+                        piso: e.target.value,
+                      }))
+                    }/>
+
+                  <TextField
+                    label="Departamento" value={formEditar.departamento}
+                    onChange={(e) =>
+                      setFormEditar((p) => ({
+                        ...p,
+                        departamento: e.target.value,
+                      }))
+                    }
+                  />
+
+                  <Stack direction="row" spacing={2} >
+                    <Button variant="contained" startIcon={<SaveIcon />} 
+                      onClick={guardarEdicion}> Guardar
+                    </Button>
+
+                    <Button variant="outlined" startIcon={<CloseIcon />}
+                      onClick={() => setEditandoId(null)}> Cancelar
+                    </Button>
+                  </Stack>
+                </Stack>
               ) : (
-                /* ── Modo vista ── */
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <h3 style={{ margin: '0 0 4px' }}>{usuario.nombreCompleto}</h3>
-                    <span style={{ color: '#94a3b8', fontSize: '13px' }}>
-                      Piso {usuario.piso} - Depto {usuario.departamento}
-                    </span>
-                  </div>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <button onClick={ () => iniciarEdicion( usuario ) } className="panel-btn panel-btn-primario">
-                      Editar
-                    </button>
-                    <button onClick={ () => eliminarUsuario( usuario.id ) } className="panel-btn panel-btn-peligro">
-                      Eliminar
-                    </button>
-                  </div>
-                </div>
-              ) }
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center"}}
+                >
+                  <Box>
+                    <Typography variant="h6">
+                      {usuario.nombreCompleto}
+                    </Typography>
 
-            </div>
+                    <Typography variant="body2" color="text.secondary">
+                      Piso {usuario.piso} - Depto {usuario.departamento}
+                    </Typography>
+                  </Box>
+
+                  <Stack direction="row" spacing={1}>
+                    <Button variant="contained" startIcon={<EditIcon />}
+                      onClick={() => iniciarEdicion(usuario)}>Editar
+                    </Button>
+
+                    <Button variant="contained" startIcon={<DeleteIcon />} color="error"
+                      onClick={() => eliminarUsuario(usuario.id)}>Eliminar
+                    </Button>
+                  </Stack>
+                </div>
+              )}
+            </Paper>
           ))
         )}
-      </Box>
-    </div>
+      </Stack>
+    </Box>
   );
 }
